@@ -1,0 +1,44 @@
+body {
+    font-family: Arial, sans-serif;
+}
+
+#profile-pic {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+#me {
+    text-align: center;
+}
+
+.about-me {
+    width: 50%;
+    text-align: justify;
+    font-size: 2.5ex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+ul {
+    margin-left: 25%;
+}
+
+.interest {
+    font-size: 1.25em;
+    margin-top: 3px;
+}
+
+.list-header {
+    margin-left: 25%;
+}
+
+a {
+    color: cyan;
+    text-decoration: none;
+}
+
+a:visited {
+    color: darkcyan;
+}
