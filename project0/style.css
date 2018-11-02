@@ -13,14 +13,6 @@ body {
     text-align: center;
 }
 
-.about-me {
-    width: 50%;
-    text-align: justify;
-    font-size: 2.5ex;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 ul {
     margin-left: 25%;
 }
@@ -41,4 +33,45 @@ a {
 
 a:visited {
     color: darkcyan;
+}
+
+.some-words {
+    font-size: 1.5em;
+}
+
+.header {
+    text-align: center;
+}
+
+.paragraph {
+    width: 50%;
+    text-align: justify;
+    font-size: 2.5ex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.poster {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+table {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    text-align: left;
+    vertical-align: middle;
+    padding: 5px;
+    width: 50%;
 }
