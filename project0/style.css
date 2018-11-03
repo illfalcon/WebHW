@@ -1,5 +1,6 @@
 body {
     font-family: Arial, sans-serif;
+    margin: 0px;
 }
 
 #profile-pic {
@@ -74,4 +75,38 @@ th, td {
     vertical-align: middle;
     padding: 5px;
     width: 50%;
+}
+
+.navigation {
+    background-color: black;
+    color: white;
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+    padding: 0px;
+    list-style: none;
+    height: 75px;
+}
+
+.navigation li {
+    float: left;
+}
+
+.navigation a {
+    
+    color: white;
+    padding: 27px;
+    font-size: 18px;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.navigation a:visited {
+    color: white;
+}
+
+.navigation a:hover{
+    background-color: gainsboro;
+    color: black;
 }
