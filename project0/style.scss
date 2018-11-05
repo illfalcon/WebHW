@@ -1,0 +1,112 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0px;
+}
+
+#profile-pic {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+#me {
+    text-align: center;
+}
+
+ul {
+    margin-left: 25%;
+}
+
+.interest {
+    font-size: 1.25em;
+    margin-top: 3px;
+}
+
+.list-header {
+    margin-left: 25%;
+}
+
+a {
+    color: cyan;
+    text-decoration: none;
+}
+
+a:visited {
+    color: darkcyan;
+}
+
+.some-words {
+    font-size: 1.5em;
+}
+
+.header {
+    text-align: center;
+}
+
+.paragraph {
+    width: 50%;
+    text-align: justify;
+    font-size: 2.5ex;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.poster {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 30%;
+}
+
+table {
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    text-align: left;
+    vertical-align: middle;
+    padding: 5px;
+    width: 50%;
+}
+
+.navigation {
+    background-color: black;
+    color: white;
+    width: 100%;
+    margin: 0px 0px 10px 0px;
+    padding: 0px;
+    list-style: none;
+    height: 75px;
+}
+
+.navigation li {
+    float: left;
+}
+
+.navigation a {
+    
+    color: white;
+    padding: 27px;
+    font-size: 18px;
+    display: block;
+    text-align: center;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.navigation a:visited {
+    color: white;
+}
+
+.navigation a:hover{
+    background-color: gainsboro;
+    color: black;
+}

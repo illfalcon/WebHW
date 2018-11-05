@@ -1,0 +1,25 @@
+.navbar {
+    font-size: 1.75em;
+    background-color: black;
+    padding: 0px;
+    margin-bottom: 15px;
+    i {
+        color: white;
+        font-size: 1.75em;
+        padding: 16px 0px;
+    }
+    .nav-item {
+        .nav-link {
+            padding: 16px 16px;
+            color: white;
+            text-decoration: none;
+            &:hover {
+                background-color: whitesmoke;
+                color: black !important;
+            }
+            &:visited {
+                color: white;
+            }
+        }
+    }
+}
