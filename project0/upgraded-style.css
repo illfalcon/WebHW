@@ -22,4 +22,54 @@
   color: white;
 }
 
+#bottom-interests ul, #top-interests ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+}
+
+#top-interests ul {
+  text-align: left;
+}
+
+#bottom-interests {
+  display: none;
+}
+#bottom-interests h4 {
+  width: 100%;
+  text-align: center;
+}
+#bottom-interests ul {
+  text-align: center;
+}
+
+#profile-pic {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.paragraph {
+  text-align: justify;
+  font-size: 2.25ex;
+}
+
+@media (max-width: 573px) {
+  #profile-pic {
+    width: 70%;
+    margin-left: 15%;
+  }
+
+  #about-me {
+    text-align: center;
+  }
+
+  #bottom-interests {
+    display: block;
+  }
+
+  #top-interests {
+    display: none;
+  }
+}
+
 /*# sourceMappingURL=upgraded-style.css.map */
