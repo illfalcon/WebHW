@@ -68,6 +68,25 @@
   margin-bottom: 10px;
 }
 
+table {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  border-collapse: collapse;
+  margin-bottom: 10px;
+}
+
+table, th, td {
+  border: 1px solid black;
+}
+
+th, td {
+  text-align: left;
+  vertical-align: middle;
+  padding: 5px;
+  width: 50%;
+}
+
 @media (max-width: 573px) {
   #profile-pic {
     width: 70%;
