@@ -22,7 +22,7 @@
   color: white;
 }
 
-#bottom-interests ul, #top-interests ul {
+#bottom-interests ul, #fav-films, #top-interests ul {
   list-style: none;
   margin: 0px;
   padding: 0px;
@@ -30,6 +30,11 @@
 
 #top-interests ul {
   text-align: left;
+}
+
+#fav-films {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 #bottom-interests {
@@ -53,6 +58,16 @@
   font-size: 2.25ex;
 }
 
+.header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.poster {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
 @media (max-width: 573px) {
   #profile-pic {
     width: 70%;
@@ -69,6 +84,11 @@
 
   #top-interests {
     display: none;
+  }
+
+  .poster {
+    width: 70%;
+    margin-left: 15%;
   }
 }
 
