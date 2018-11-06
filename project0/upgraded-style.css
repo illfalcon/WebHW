@@ -22,7 +22,7 @@
   color: white;
 }
 
-#bottom-interests ul, #fav-films, #top-interests ul {
+#bottom-interests ul, .favs, #top-interests ul, ul {
   list-style: none;
   margin: 0px;
   padding: 0px;
@@ -32,7 +32,7 @@
   text-align: left;
 }
 
-#fav-films {
+.favs {
   text-align: center;
   margin-bottom: 10px;
 }

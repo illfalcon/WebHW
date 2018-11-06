@@ -30,12 +30,16 @@
     padding: 0px;
 }
 
+ul {
+    @extend %default-list;
+}
+
 #top-interests ul {
     @extend %default-list;
     text-align: left;
 }
 
-#fav-films {
+.favs {
     @extend %default-list;
     text-align: center;
     margin-bottom: 10px;
