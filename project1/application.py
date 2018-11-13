@@ -71,4 +71,16 @@ def register():
 
 @app.route("/books")
 def books():
-    return "Books"
+    if session["user_id"] == None:
+        return redirect(url_for("index"))
+    else:
+        books = db.execute("SELECT * FROM books").fetchall()
+        return render_template("books.html", books=books)
+
+@app.route("/books/<int:book_id>")
+def book(book_id):
+    book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
+    if not book == None:
+        return render_template("book.html", book = book)
+    else:
+        return "Error"
