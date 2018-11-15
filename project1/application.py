@@ -34,6 +34,21 @@ def addUser(name, surname, username, password):
                {"name": name, "surname": surname, "username": username, "password": password})
     db.commit()
 
+def checkIfRegistrationValid(name, surname, username, password):
+    if (not name) or (not name.strip().isalpha()):
+        return (False, "Name must consist of characters of latin alphabet")
+    elif (not surname) or not surname.strip().isalpha():
+        return (False, "Surname must consist of characters of latin alphabet")
+    elif (not username) or " " in username.strip():
+        return (False, "Username must not contain whitespaces")
+    elif not password:
+        return (False, "Password field must not be empty")
+    elif password.len() < 7:
+        return (False, "Password field must contain at least 7 characters")
+    else:
+        return True
+
+
 @app.route("/")
 def index():
     if session.get("user_id") == None:
@@ -49,12 +64,17 @@ def login():
     user = db.execute("SELECT * FROM users WHERE username = :username",
                       {"username": username}).fetchone()
     if user == None:
-        return render_template("loginerror.html")
+        return render_template("loginerror.html", loginErrorMessage = "No such user")
     elif not check_password_hash(user.password, passwordText):
-        return render_template("loginerror.html")
+        return render_template("loginerror.html", loginErrorMessage = "Invalid password")
     else:
         session["user_id"] = user.id
         return redirect(url_for("books"))
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session["user_id"] = None
+    return redirect(url_for('index'))
 
 @app.route("/register", methods=["POST"])
 def register():
@@ -63,8 +83,12 @@ def register():
     username = request.form.get("username")
     passwordText = request.form.get("password")
     passwordHash = generate_password_hash(passwordText)
-    if checkIfUserExists(username):
-        return render_template("registererror.html")
+    check = checkIfRegistrationValid(name, surname, username, passwordText)
+    if not check[0]:
+        return render_template("registererror.html", registerErrorMessage = check[1])
+    elif checkIfUserExists(username):
+        return render_template("registererror.html",
+                               registerErrorMessage = "User with this username already exists, pick another one!")
     else:
         addUser(name, surname, username, passwordHash)
         return redirect(url_for('books'))
@@ -79,13 +103,24 @@ def books():
 
 @app.route("/books/<int:book_id>")
 def book(book_id):
-    book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
-    if not book == None:
-        reviews = db.execute("SELECT * FROM reviews JOIN users ON reviews.user_id = users.id WHERE book_id = :book_id",
-                             {"book_id": book_id}).fetchall()
-        return render_template("book.html", book = book, reviews = reviews)
+    if session["user_id"] == None:
+        return redirect(url_for("index"))
     else:
-        return "Error"
+        book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
+        if not book == None:
+            reviews = db.execute("SELECT * FROM reviews JOIN users ON reviews.user_id = users.id WHERE book_id = :book_id",
+                                 {"book_id": book_id}).fetchall()
+            return render_template("book.html", book = book, reviews = reviews)
+        else:
+            return "Error"
+
+@app.route("/books/search", methods=["GET"])
+def search():
+    keyword = request.args.get("keyword")
+    searchKey = '%' + keyword + '%'
+    results = db.execute("SELECT * FROM books WHERE LOWER(title) LIKE LOWER(:keyword) OR LOWER(author) LIKE LOWER(:keyword) OR isbm LIKE :keyword",
+                         {"keyword": searchKey}).fetchall()
+    return render_template("books.html", books = results)
 
 grades = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
 
