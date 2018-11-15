@@ -8,6 +8,48 @@
             <h3>{{ book.author }}</h3>
             <p>{{ book.year }}</p>
             <p>{{ book.isbm }}</p>
+            {% for review in reviews %}
+            <div>
+                <h6>{{ review.username }}</h6>
+                <p>{{ review.text }}</p>
+                <p>{{ review.rating }}</p>
+            </div>
+            {% else %}
+            <div>
+                <h5>Be the first one to review this book!</h5>
+            </div>
+            {% endfor %}
+            <form action="{{ url_for('submitReview', book_id = book.id) }}" method="post">
+                <div class="form-group">
+                    <label>Comment</label>
+                    <textarea class="form-control" rows="5" name="text" placeholder="Write what you think about the book"></textarea>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rating" id="inlineRadio0" value="zero">
+                        <label class="form-check-label" for="inlineRadio0">0</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rating" id="inlineRadio1" value="one">
+                        <label class="form-check-label" for="inlineRadio1">1</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rating" id="inlineRadio2" value="two">
+                        <label class="form-check-label" for="inlineRadio2">2</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rating" id="inlineRadio3" value="three">
+                        <label class="form-check-label" for="inlineRadio3">3</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rating" id="inlineRadio4" value="four">
+                        <label class="form-check-label" for="inlineRadio1">4</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="rating" id="inlineRadio5" value="five">
+                        <label class="form-check-label" for="inlineRadio2">5</label>
+                    </div>
+                    <button class="btn btn-outline-primary">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

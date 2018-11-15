@@ -81,6 +81,27 @@ def books():
 def book(book_id):
     book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
     if not book == None:
-        return render_template("book.html", book = book)
+        reviews = db.execute("SELECT * FROM reviews JOIN users ON reviews.user_id = users.id WHERE book_id = :book_id",
+                             {"book_id": book_id}).fetchall()
+        return render_template("book.html", book = book, reviews = reviews)
     else:
         return "Error"
+
+grades = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
+
+@app.route("/books/<int:book_id>/submit", methods=["POST"])
+def submitReview(book_id):
+    userId = session["user_id"]
+    reviewByThisUser = db.execute("SELECT * FROM reviews WHERE user_id = :user_id AND book_id = :book_id",
+                                  {"user_id": userId, "book_id": book_id}).fetchone()
+    if reviewByThisUser == None:
+        reviewText = request.form.get("text")
+        rating = grades[request.form.get("rating")]
+        db.execute("INSERT INTO reviews (user_id, book_id, text, rating) VALUES (:user_id, :book_id, :text, :rating)",
+                   {"user_id": userId, "book_id": book_id, "text": reviewText, "rating": rating})
+        db.commit()
+        return redirect(url_for('book', book_id = book_id))
+    else:
+        return "You have alredy submitted form for this book"
+
+
