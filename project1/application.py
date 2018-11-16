@@ -93,6 +93,13 @@ def register():
         addUser(name, surname, username, passwordHash)
         return redirect(url_for('books'))
 
+@app.route("/delete", methods=["POST"])
+def deleteAccount():
+    db.execute("DELETE FROM users WHERE id = :user_id", {"user_id": session["user_id"]})
+    db.commit()
+    session["user_id"] = None
+    return redirect(url_for("index"))
+
 @app.route("/books")
 def books():
     if session["user_id"] == None:
