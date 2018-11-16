@@ -8,6 +8,8 @@
             <h3>{{ book.author }}</h3>
             <p>{{ book.year }}</p>
             <p>{{ book.isbm }}</p>
+            <p>Number of ratings submitted on Goodreads: {{ numberOfRatings }}</p>
+            <p>Average Goodreads rating: {{ averageRating }}</p>
             {% for review in reviews %}
             <div>
                 <h6>{{ review.username }}</h6>

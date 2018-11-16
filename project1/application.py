@@ -1,6 +1,7 @@
 import os
+import requests
 
-from flask import Flask, session, render_template, request, redirect, url_for
+from flask import Flask, session, render_template, request, redirect, url_for, jsonify
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -43,11 +44,16 @@ def checkIfRegistrationValid(name, surname, username, password):
         return (False, "Username must not contain whitespaces")
     elif not password:
         return (False, "Password field must not be empty")
-    elif password.len() < 7:
+    elif len(password) < 7:
         return (False, "Password field must contain at least 7 characters")
     else:
-        return True
+        return (True, "")
 
+def getApiInfo(isbn):
+    apiKey = "U0751KevlHMnGM2Ky5cOw"
+    goodreadsStats = requests.get("https://www.goodreads.com/book/review_counts.json",
+                                  params={"key": apiKey, "isbns": isbn})
+    return goodreadsStats
 
 @app.route("/")
 def index():
@@ -115,9 +121,12 @@ def book(book_id):
     else:
         book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
         if not book == None:
-            reviews = db.execute("SELECT * FROM reviews JOIN users ON reviews.user_id = users.id WHERE book_id = :book_id",
+            goodReadsInfo = getApiInfo(book.isbm).json()
+            ratingsCount = goodReadsInfo["books"][0]["work_ratings_count"]
+            averageRating = goodReadsInfo["books"][0]["average_rating"]
+            reviews = db.execute("SELECT * FROM reviews JOIN users ON reviews.user_id = users.id WHERE book_id = :book_id LIMIT 10",
                                  {"book_id": book_id}).fetchall()
-            return render_template("book.html", book = book, reviews = reviews)
+            return render_template("book.html", book = book, reviews = reviews, numberOfRatings = ratingsCount, averageRating = averageRating)
         else:
             return "Error"
 
