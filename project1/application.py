@@ -49,6 +49,12 @@ def checkIfRegistrationValid(name, surname, username, password):
     else:
         return (True, "")
 
+def checkReview(text, rating):
+    if not text or not rating:
+        return False
+    else:
+        return True
+
 def getApiInfo(isbn):
     apiKey = "U0751KevlHMnGM2Ky5cOw"
     goodreadsStats = requests.get("https://www.goodreads.com/book/review_counts.json",
@@ -57,7 +63,7 @@ def getApiInfo(isbn):
 
 @app.route("/")
 def index():
-    if session.get("user_id") == None:
+    if not 'user_id' in session or session["user_id"] == None:
         return render_template("index.html")
     else:
         return redirect(url_for("books"))
@@ -66,7 +72,6 @@ def index():
 def login():
     username = request.form.get("username")
     passwordText = request.form.get("password")
-    #todo: implement security check
     user = db.execute("SELECT * FROM users WHERE username = :username",
                       {"username": username}).fetchone()
     if user == None:
@@ -97,6 +102,8 @@ def register():
                                registerErrorMessage = "User with this username already exists, pick another one!")
     else:
         addUser(name, surname, username, passwordHash)
+        user_id = db.execute("SELECT TOP 1 id FROM users ORDER BY id DESC")
+        session["user_id"] = user_id
         return redirect(url_for('books'))
 
 @app.route("/delete", methods=["POST"])
@@ -108,7 +115,7 @@ def deleteAccount():
 
 @app.route("/books")
 def books():
-    if not 'user_id' in session:
+    if not 'user_id' in session or session["user_id"] == None:
         return redirect(url_for("index"))
     else:
         books = db.execute("SELECT * FROM books").fetchall()
@@ -116,7 +123,7 @@ def books():
 
 @app.route("/books/<int:book_id>")
 def book(book_id):
-    if session["user_id"] == None:
+    if not 'user_id' in session or session["user_id"] == None:
         return redirect(url_for("index"))
     else:
         book = db.execute("SELECT * FROM books WHERE id = :id", {"id": book_id}).fetchone()
@@ -132,11 +139,14 @@ def book(book_id):
 
 @app.route("/books/search", methods=["GET"])
 def search():
-    keyword = request.args.get("keyword")
-    searchKey = '%' + keyword + '%'
-    results = db.execute("SELECT * FROM books WHERE LOWER(title) LIKE LOWER(:keyword) OR LOWER(author) LIKE LOWER(:keyword) OR isbm LIKE :keyword",
-                         {"keyword": searchKey}).fetchall()
-    return render_template("books.html", books = results)
+    if not 'user_id' in session or session["user_id"] == None:
+        return redirect(url_for("index"))
+    else:
+        keyword = request.args.get("keyword")
+        searchKey = '%' + keyword + '%'
+        results = db.execute("SELECT * FROM books WHERE LOWER(title) LIKE LOWER(:keyword) OR LOWER(author) LIKE LOWER(:keyword) OR isbm LIKE :keyword",
+                             {"keyword": searchKey}).fetchall()
+        return render_template("books.html", books = results)
 
 grades = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5}
 
@@ -148,10 +158,13 @@ def submitReview(book_id):
     if reviewByThisUser == None:
         reviewText = request.form.get("text")
         rating = grades[request.form.get("rating")]
-        db.execute("INSERT INTO reviews (user_id, book_id, text, rating) VALUES (:user_id, :book_id, :text, :rating)",
-                   {"user_id": userId, "book_id": book_id, "text": reviewText, "rating": rating})
-        db.commit()
-        return redirect(url_for('book', book_id = book_id))
+        if checkReview(reviewText, rating):
+            db.execute("INSERT INTO reviews (user_id, book_id, text, rating) VALUES (:user_id, :book_id, :text, :rating)",
+                       {"user_id": userId, "book_id": book_id, "text": reviewText, "rating": rating})
+            db.commit()
+            return redirect(url_for('book', book_id = book_id))
+        else:
+            return "Fields mus not be empty"
     else:
         return "You have already submitted form for this book"
 
