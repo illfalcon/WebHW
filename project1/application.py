@@ -1,7 +1,7 @@
 import os
 import requests
 
-from flask import Flask, session, render_template, request, redirect, url_for, jsonify
+from flask import Flask, session, render_template, request, redirect, url_for, jsonify, abort
 from flask_session import Session
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -108,7 +108,7 @@ def deleteAccount():
 
 @app.route("/books")
 def books():
-    if session["user_id"] == None:
+    if not 'user_id' in session:
         return redirect(url_for("index"))
     else:
         books = db.execute("SELECT * FROM books").fetchall()
@@ -153,6 +153,21 @@ def submitReview(book_id):
         db.commit()
         return redirect(url_for('book', book_id = book_id))
     else:
-        return "You have alredy submitted form for this book"
+        return "You have already submitted form for this book"
+
+@app.route("/api/<string:isbm>")
+def returnApi(isbm):
+    book = db.execute("SELECT * FROM books WHERE isbm = :isbm", {"isbm": isbm}).fetchone()
+    if book == None:
+        return abort(404)
+    else:
+        reviews = db.execute("SELECT COUNT(*), AVG(rating) FROM reviews WHERE book_id = :book_id",
+                             {"book_id": book.id}).fetchone()
+        if not reviews:
+            return jsonify(title=book.title, author=book.author, year=book.year, isbm=book.isbm,
+                       reviews_count=0, average_rating=0)
+        else:
+            return jsonify(title=book.title, author=book.author, year=book.year, isbm=book.isbm,
+                       reviews_count=reviews.count, average_rating=reviews.avg)
 
 
