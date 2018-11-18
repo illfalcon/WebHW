@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block body %}
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <div id="user">
+                username
+            </div>
+            <div class="channels-overview">
+                <div class="">
+                    <h5>Your channels</h5>
+                    <ul id="yourChannelsList">
+
+                    </ul>
+                    <div class="search">
+                        <form class="searchForm" action="" method="post">
+                            <input type="text" name="channelSearch" value="">
+                            <button type="submit" name="searchButton">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="">
+                    <h5>All channels:</h5>
+                    <ul id="allChannelsList">
+
+                    </ul>
+                    <div class="search">
+                        <form class="searchForm" action="" method="post">
+                            <input type="text" name="channelSearch" value="">
+                            <button type="submit" name="searchButton">Search</button>
+                        </form>
+                    </div>
+                </div>
+                <button type="button" name="createChannelButton">Create Channel</button>
+            </div>
+
+        </div>
+        <div class="col-9">
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 offset-3" id="sign-in">
+            <form id="sign-in-form" action="#" method="post">
+                <input type="text" id="username" placeholder="username">
+                <button type="submit" name="submitNameButton">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
