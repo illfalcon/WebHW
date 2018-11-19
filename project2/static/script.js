@@ -6,19 +6,12 @@ function checkLocalStorage(){
     }
 }
 
-var createChannelHtml = document.createElement("div");
-createChannelHtml.innerHTML =
-'<div class="row">' +
-    '<div class="col-12" id="createChannelDiv">' +
-        '<form class="createChannelForm" action="#" method="post">' +
-            '<input type="text" id="channelName" placeholder="Channel Name">' +
-            '<button type="submit" id="newChannelSubmit" name="button">Submit</button>' +
-        '</form>' +
-    '</div>' +
-'</div>';
-
 function main(){
     var username;
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+    // setting event listeners
+
     document.querySelector("#sign-in-form").onsubmit = function() {
         username = document.querySelector("#username").value;
         document.querySelector("#sign-in").style.display = "none";
@@ -29,8 +22,25 @@ function main(){
     }
 
     document.querySelector("#createChannelButton").onclick = function() {
-        document.querySelector(".container-fluid").appendChild(createChannelHtml);
+        document.querySelector("#createChannelDiv").style.display = "block";
     }
+
+    socket.on('connect', () => {
+        document.querySelector("#createChannelForm").onsubmit = function() {
+            const channelName = document.querySelector("#channelName").value;
+            const channelCreator = localStorage.getItem('username');
+            socket.emit('create channel', {'channelName': channelName, 'channelCreator': channelCreator});
+            return false;
+        }
+    })
+
+    socket.on('announce channel', data => {
+        const li = document.createElement("li");
+        li.innerHTML = data.channelName;
+        document.querySelector('#allChannelsList').appendChild(li);
+    })
+
+    // implementing main function
 
     if (checkLocalStorage()){
         document.querySelector("#user").innerHTML = localStorage.getItem('username');

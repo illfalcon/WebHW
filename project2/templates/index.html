@@ -7,10 +7,9 @@
             <div id="user">
             </div>
             <div class="channels-overview">
-                <div class="">
+                <!-- <div class="">
                     <h5>Your channels</h5>
                     <ul id="yourChannelsList">
-
                     </ul>
                     <div class="search">
                         <form class="searchForm" action="" method="post">
@@ -18,7 +17,7 @@
                             <button type="submit" name="searchButton">Search</button>
                         </form>
                     </div>
-                </div>
+                </div> -->
                 <div class="">
                     <h5>All channels:</h5>
                     <ul id="allChannelsList">
@@ -47,6 +46,13 @@
             </form>
         </div>
     </div>
-
+    <div class="row">
+        <div class="col-12" id="createChannelDiv">
+            <form id="createChannelForm" action="#" method="post">
+                <input type="text" id="channelName" placeholder="Channel Name">
+                <button type="submit" id="newChannelSubmit" name="button">Submit</button>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %}

@@ -4,5 +4,6 @@
 }
 
 #createChannelDiv {
+    display: none;
     position: fixed;
 }
