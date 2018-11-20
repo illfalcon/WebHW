@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
@@ -15,6 +15,10 @@ class Channel:
         self.users.append(creator)
         self.messages = []
 
+    def serialize(self):
+        return {'name': self.name,
+        'creator': self.creator}
+
 class Message:
     def __init__(self, sender, text):
         self.sender = sender
@@ -25,7 +29,14 @@ listOfChannels = []
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", allChannels = listOfChannels)
+
+@app.route("/refresh_your_channels", methods=["POST"])
+def refreshYourChannels():
+    username = request.form.get('username')
+    yourChannels = list(filter(lambda x: username in x.users, listOfChannels))
+    return jsonify({"channels": [c.serialize() for c in yourChannels]})
+
 
 @socketio.on('create channel')
 def createChannel(data):
