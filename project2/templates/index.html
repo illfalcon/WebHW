@@ -3,29 +3,29 @@
 {% block body %}
 <div class="container-fluid">
     <div class="row">
-        <div class="col-3">
+        <div class="col-3" id="left-part">
             <div id="user">
             </div>
             <div class="channels-overview">
-                <div class="">
+                <div class="channels-section">
                     <h5>Your channels</h5>
-                    <ul id="yourChannelsList">
-                    </ul>
+                    <div class="channels" id="yourChannelsList">
+                    </div>
                     <div class="search">
                         <form class="searchForm" action="" method="post">
-                            <input type="text" name="channelSearch" value="">
-                            <button type="submit" name="searchButton">Search</button>
+                            <input type="text" class="search-input" name="channelSearch" value="">
+                            <button type="submit" class="search-button" name="searchButton"><i class="fas fa-search"></i></button>
                         </form>
                     </div>
                 </div>
-                <div class="">
+                <div class="channels-section">
                     <h5>All channels:</h5>
-                    <ul id="allChannelsList">
-                    </ul>
+                    <div class="channels" id="allChannelsList">
+                    </div>
                     <div class="search">
                         <form class="searchForm" action="" method="post">
-                            <input type="text" name="channelSearch" value="">
-                            <button type="submit" name="searchButton">Search</button>
+                            <input type="text" class="search-input" name="channelSearch" value="">
+                            <button type="submit" class="search-button" name="searchButton"><i class="fas fa-search"></i></button>
                         </form>
                     </div>
                 </div>
@@ -34,14 +34,14 @@
 
         </div>
         <div class="col-9">
-
+            text
         </div>
     </div>
     <div class="row">
         <div class="col-6 offset-3" id="sign-in">
             <form id="sign-in-form" action="#" method="post">
                 <input type="text" id="username" placeholder="username">
-                <button type="submit" name="submitNameButton">Submit</button>
+                <button type="submit" class="search-button" name="submitNameButton"></button>
             </form>
         </div>
     </div>

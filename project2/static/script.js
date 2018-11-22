@@ -12,10 +12,9 @@ function displayYourChannels() {
     request.onload = function() {
         const data = JSON.parse(request.responseText);
         for (i in data.channels){
-            console.log(data.channels[i]);
-            let li = document.createElement("li");
-            li.innerHTML = data.channels[i].name;
-            document.querySelector("#yourChannelsList").appendChild(li);
+            let div = document.createElement("div");
+            div.innerHTML = data.channels[i].name;
+            document.querySelector("#yourChannelsList").appendChild(div);
         }
     }
     const username = localStorage.getItem('username');
@@ -31,10 +30,9 @@ function displayAllChannels() {
     request.onload = function() {
         const data = JSON.parse(request.responseText);
         for (i in data.channels){
-            console.log(data.channels[i]);
-            let li = document.createElement("li");
-            li.innerHTML = data.channels[i].name;
-            document.querySelector("#allChannelsList").appendChild(li);
+            let div = document.createElement("div");
+            div.innerHTML = data.channels[i].name;
+            document.querySelector("#allChannelsList").appendChild(div);
         }
     }
     request.send();
@@ -64,23 +62,24 @@ function main(){
         document.querySelector("#newChannelSubmit").onclick = function() {
             const channelName = document.querySelector("#channelName").value;
             const channelCreator = localStorage.getItem('username');
+            document.querySelector("#createChannelDiv").style.display = "none";
             socket.emit('create channel', {'channelName': channelName, 'channelCreator': channelCreator});
         }
     })
 
     socket.on('announce channel', function(data) {
-        let li1 = document.createElement("li");
-        li1.innerHTML = data.channelName;
-        let li2 = document.createElement("li");
-        li2.innerHTML = data.channelName;
+        let div1 = document.createElement("div");
+        div1.innerHTML = data.channelName;
+        let div2 = document.createElement("div");
+        div2.innerHTML = data.channelName;
 
         yourChannels = document.querySelector('#yourChannelsList');
         allChannels = document.querySelector('#allChannelsList');
 
         if (localStorage['username'] === data.channelCreator) {
-            yourChannels.appendChild(li1);
+            yourChannels.appendChild(div1);
         }
-        allChannels.appendChild(li2);
+        allChannels.appendChild(div2);
     })
 
     // implementing main function

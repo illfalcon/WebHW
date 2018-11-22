@@ -1,9 +1,42 @@
 #sign-in {
-    display: none;
-    position: fixed;
+  display: none;
+  position: fixed;
 }
 
 #createChannelDiv {
-    display: none;
-    position: fixed;
+  display: none;
+  position: fixed;
 }
+
+#left-part {
+  border-right: 1px solid black;
+  padding: 0px;
+  height: 100%;
+}
+
+.search-input {
+  width: 85%;
+}
+
+.search-button {
+  width: 15%;
+  float: right;
+}
+
+.channels-overview {
+  width: 100%;
+}
+.channels-overview div {
+  width: 100%;
+}
+
+.channels div {
+  text-align: left;
+  margin: 0px;
+  padding: 5px 8px;
+}
+.channels div:hover {
+  background-color: blue;
+}
+
+/*# sourceMappingURL=styles.css.map */
