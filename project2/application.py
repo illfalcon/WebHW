@@ -31,12 +31,15 @@ listOfChannels = []
 def index():
     return render_template("index.html", allChannels = listOfChannels)
 
-@app.route("/refresh_your_channels", methods=["POST"])
-def refreshYourChannels():
+@app.route("/display_your_channels", methods=["POST"])
+def displayYourChannels():
     username = request.form.get('username')
     yourChannels = list(filter(lambda x: username in x.users, listOfChannels))
     return jsonify({"channels": [c.serialize() for c in yourChannels]})
 
+@app.route("/display_all_channels", methods=["POST"])
+def displayAllChannels():
+    return jsonify({"channels": [c.serialize() for c in listOfChannels]})
 
 @socketio.on('create channel')
 def createChannel(data):
@@ -44,4 +47,4 @@ def createChannel(data):
     channelCreator = data["channelCreator"]
     newChannel = Channel(channelName, channelCreator)
     listOfChannels.append(newChannel)
-    emit('announce channel', {'channelName': channelName}, broadcast=True)
+    emit('announce channel', {'channelName': channelName, 'channelCreator': channelCreator}, broadcast=True)
