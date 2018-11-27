@@ -39,7 +39,9 @@ def displayYourChannels():
 
 @app.route("/display_all_channels", methods=["POST"])
 def displayAllChannels():
-    return jsonify({"channels": [c.serialize() for c in listOfChannels]})
+    username = request.form.get('username')
+    otherChannels = list(filter(lambda x: username not in x.users, listOfChannels))
+    return jsonify({"channels": [c.serialize() for c in otherChannels]})
 
 @socketio.on('create channel')
 def createChannel(data):

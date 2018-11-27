@@ -6,16 +6,15 @@ function checkLocalStorage(){
     }
 }
 
-function selectChannel(channelName) {
-    localStorage.setItem('openedChannel', channelName);
-    listOfChannels = document.querySelector('#yourChannelsList').childNodes;
+function selectChannel(div) {
+    localStorage.setItem('openedChannel', div.innerHTML);
+    listOfChannels = div.parentNode.childNodes;
+    console.log(listOfChannels);
     for (channel of listOfChannels) {
         channel.style.backgroundColor = "white";
-        if (channel.innerHTML === channelName) {
-            // TODO: implement server query for messages
-            channel.style.backgroundColor = "red";
-        }
     }
+    div.style.backgroundColor = "red";
+    // TODO: implement message displaying function
 }
 
 function displayYourChannels() {
@@ -27,8 +26,19 @@ function displayYourChannels() {
             let div = document.createElement("div");
             div.innerHTML = data.channels[i].name;
             document.querySelector("#yourChannelsList").appendChild(div);
-            div.onmouseover = () => { div.style.backgroundColor = "blue"; }
-            div.onmouseout = () => { div.style.backgroundColor = "white"; }
+            localStorage.getItem('openedChannel') === div.innerHTML ? div.style.backgroundColor = "red" : div.style.backgroundColor = "white";
+            div.onmouseover = function() { div.style.backgroundColor = "blue"; }
+            div.onmouseout = function() { localStorage.getItem('openedChannel') === div.innerHTML ? div.style.backgroundColor = "red" : div.style.backgroundColor = "white"; }
+            div.onclick = function() {
+                localStorage.setItem('openedChannel', div.innerHTML);
+                listOfChannels = div.parentNode.childNodes;
+                console.log(listOfChannels);
+                for (channel of listOfChannels) {
+                    channel.style.backgroundColor = "white";
+                }
+                div.style.backgroundColor = "red";
+                // TODO: implement message displaying function
+            }
         }
     }
     const username = localStorage.getItem('username');
@@ -47,9 +57,24 @@ function displayAllChannels() {
             let div = document.createElement("div");
             div.innerHTML = data.channels[i].name;
             document.querySelector("#allChannelsList").appendChild(div);
+            localStorage.getItem('openedChannel') === div.innerHTML ? div.style.backgroundColor = "red" : div.style.backgroundColor = "white";
+            div.onmouseover = function() { div.style.backgroundColor = "blue"; }
+            div.onmouseout = function() { localStorage.getItem('openedChannel') === div.innerHTML ? div.style.backgroundColor = "red" : div.style.backgroundColor = "white"; }
+            div.onclick = function() {
+                localStorage.setItem('openedChannel', div.innerHTML);
+                listOfChannels = div.parentNode.childNodes;
+                console.log(listOfChannels);
+                for (channel of listOfChannels) {
+                    channel.style.backgroundColor = "white";
+                }
+                div.style.backgroundColor = "red";
+            }
         }
     }
-    request.send();
+    const username = localStorage.getItem('username');
+    const form = new FormData();
+    form.append('username', username);
+    request.send(form);
     return false;
 }
 
@@ -92,8 +117,18 @@ function main(){
 
         if (localStorage['username'] === data.channelCreator) {
             yourChannels.appendChild(div1);
+            div1.onmouseover = function() { div1.style.backgroundColor = "blue"; }
+            div1.onmouseout = function() { localStorage.getItem('openedChannel') === div1.innerHTML ? div1.style.backgroundColor = "red" : div1.style.backgroundColor = "white"; }
+            div1.onclick = function() {
+                localStorage.setItem('openedChannel', div1.innerHTML);
+                listOfChannels = div1.parentNode.childNodes;
+                console.log(listOfChannels);
+                for (channel of listOfChannels) {
+                    channel.style.backgroundColor = "white";
+                }
+                div1.style.backgroundColor = "red";
+            }
         }
-        allChannels.appendChild(div2);
     })
 
     // implementing main function
