@@ -6,6 +6,18 @@ function checkLocalStorage(){
     }
 }
 
+function selectChannel(channelName) {
+    localStorage.setItem('openedChannel', channelName);
+    listOfChannels = document.querySelector('#yourChannelsList').childNodes;
+    for (channel of listOfChannels) {
+        channel.style.backgroundColor = "white";
+        if (channel.innerHTML === channelName) {
+            // TODO: implement server query for messages
+            channel.style.backgroundColor = "red";
+        }
+    }
+}
+
 function displayYourChannels() {
     const request = new XMLHttpRequest();
     request.open('POST', '/display_your_channels');
@@ -15,6 +27,8 @@ function displayYourChannels() {
             let div = document.createElement("div");
             div.innerHTML = data.channels[i].name;
             document.querySelector("#yourChannelsList").appendChild(div);
+            div.onmouseover = () => { div.style.backgroundColor = "blue"; }
+            div.onmouseout = () => { div.style.backgroundColor = "white"; }
         }
     }
     const username = localStorage.getItem('username');
@@ -92,7 +106,6 @@ function main(){
     }
 
     displayAllChannels();
-
 }
 
 document.addEventListener('DOMContentLoaded', main);
