@@ -1,3 +1,27 @@
+html, body {
+   height: 100%;
+   width: 100%;
+   margin: 0;
+   padding: 0;
+}
+
+.container-fluid {
+    height: 100%;
+    & > .row {
+        height: 100%;
+    }
+    #sign-in-row {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    #create-channel-row {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+}
+
 #sign-in {
     display: none;
     position: fixed;
@@ -12,6 +36,23 @@
     border-right: 1px solid black;
     padding: 0px;
     height: 100%;
+}
+
+#right-part {
+    height: 100%;
+}
+
+#channelHeader {
+    height: 10%;
+}
+
+#messagesArea {
+    height: 80%;
+    background-color: black;
+}
+
+#messageInput {
+    height: 10%;
 }
 
 .search-input {

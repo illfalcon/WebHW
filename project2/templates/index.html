@@ -2,7 +2,7 @@
 
 {% block body %}
 <div class="container-fluid">
-    <div class="row">
+    <div class="row" id="main-row">
         <div class="col-3" id="left-part">
             <div id="user">
             </div>
@@ -29,13 +29,18 @@
                 </div>
                 <button type="button" id="createChannelButton">Create Channel</button>
             </div>
-
         </div>
-        <div class="col-9">
-            text
+        <div class="col-9" id="right-part">
+            <div id="channelHeader"></div>
+            <div id="messagesArea">
+            </div>
+            <div class="row" id="messageInput">
+                <textarea class="form-control col-10" id="messageTextArea" rows="3" placeholder="Enter your message..."></textarea>
+                <button class="col-2" id="sendMessageButton">Send</button>
+            </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="sign-in-row">
         <div class="col-6 offset-3" id="sign-in">
             <form id="sign-in-form" action="#" method="post">
                 <input type="text" id="username" placeholder="username">
@@ -43,7 +48,7 @@
             </form>
         </div>
     </div>
-    <div class="row">
+    <div class="row" id="create-channel-row">
         <div class="col-12" id="createChannelDiv">
             <input type="text" id="channelName" placeholder="Channel Name">
             <button type="submit" id="newChannelSubmit" name="button">Submit</button>
