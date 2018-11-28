@@ -24,12 +24,26 @@ class Message:
         self.sender = sender
         self.text = text
 
+    def serialize(self):
+        return {'sender': self.sender,
+        'text': self.text}
+
 
 listOfChannels = []
 
 @app.route("/")
 def index():
     return render_template("index.html", allChannels = listOfChannels)
+
+@app.route("/display_messages", methods=["POST"])
+def displayMessages():
+    channelName = request.form.get('channelName')
+    neededChannel = None;
+    for channel in listOfChannels:
+        if channel.name == channelName:
+            neededChannel = channel
+            break
+    return jsonify({'messages': [m.serialize() for m in neededChannel.messages]})
 
 @app.route("/display_your_channels", methods=["POST"])
 def displayYourChannels():
@@ -50,3 +64,17 @@ def createChannel(data):
     newChannel = Channel(channelName, channelCreator)
     listOfChannels.append(newChannel)
     emit('announce channel', {'channelName': channelName, 'channelCreator': channelCreator}, broadcast=True)
+
+@socketio.on('message sent')
+def sendMessage(data):
+    channelName = data["channelName"]
+    sender = data["messageSender"]
+    text = data["messageText"]
+    channel = None;
+    for c in listOfChannels:
+        if c.name == channelName:
+            channel = c
+            break
+    message = Message(sender, text)
+    channel.messages.append(message)
+    emit ('announce message', {'channel': channelName, 'sender': sender, 'text': text}, broadcast=True)

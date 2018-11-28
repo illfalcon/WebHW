@@ -17,8 +17,36 @@ function checkLocalStorage(){
 //     // TODO: implement message displaying function
 // }
 
-function displayMessages(nameOfChannel) {
+function displayMessages() {
+    document.querySelector('#messagesArea').innerHTML = '';
+    const request = new XMLHttpRequest();
+    request.open('POST', '/display_messages');
 
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+        for (message of data.messages) {
+            let outerDiv = document.createElement('div');
+            if (message.sender === localStorage.getItem('username')) {
+                outerDiv.classList.add('message-orange');
+            } else {
+                outerDiv.classList.add('message-blue');
+            }
+            let senderName = document.createElement('h5');
+            senderName.innerHTML = message.sender;
+            let messageText = document.createElement('p');
+            messageText.classList.add('message-content');
+            messageText.innerHTML = message.text;
+            outerDiv.appendChild(senderName);
+            outerDiv.appendChild(messageText);
+            document.querySelector('#messagesArea').appendChild(outerDiv);
+        }
+    }
+
+    const form = new FormData();
+    let nameOfChannel = localStorage.getItem('openedChannel');
+    form.append('channelName', nameOfChannel);
+    request.send(form);
+    return false;
 }
 
 function displayYourChannels() {
@@ -36,12 +64,11 @@ function displayYourChannels() {
             div.onclick = function() {
                 localStorage.setItem('openedChannel', div.innerHTML);
                 listOfChannels = div.parentNode.childNodes;
-                console.log(listOfChannels);
                 for (channel of listOfChannels) {
                     channel.style.backgroundColor = "white";
                 }
                 div.style.backgroundColor = "red";
-                // TODO: implement message displaying function
+                displayMessages();
             }
         }
     }
@@ -72,7 +99,7 @@ function displayAllChannels() {
                     channel.style.backgroundColor = "white";
                 }
                 div.style.backgroundColor = "red";
-                // TODO: implement message displaying function
+                displayMessages();
             }
         }
     }
@@ -112,6 +139,31 @@ function main(){
             document.querySelector("#main-row").style.pointerEvents = "auto";
             socket.emit('create channel', {'channelName': channelName, 'channelCreator': channelCreator});
         }
+
+        document.querySelector("#sendMessageButton").onclick = function() {
+            const channelName = localStorage.getItem('openedChannel');
+            const messageText = document.querySelector('#messageTextArea').value;
+            const messageSender = localStorage.getItem('username');
+            socket.emit('message sent', {'channelName': channelName, 'messageText': messageText, 'messageSender': messageSender});
+        }
+    })
+
+    socket.on('announce message', function(message){
+        if (localStorage.getItem('openedChannel') === message.channel){
+            let outerDiv = document.createElement('div');
+            if (message.sender === localStorage.getItem('username')) {                outerDiv.classList.add('message-orange')
+            } else {
+                outerDiv.classList.add('message-blue')
+            }
+            let senderName = document.createElement('h5');
+            senderName.innerHTML = message.sender;
+            let messageText = document.createElement('p');
+            messageText.classList.add('message-content');
+            messageText.innerHTML = message.text;
+            outerDiv.appendChild(senderName);
+            outerDiv.appendChild(messageText);
+            document.querySelector('#messagesArea').appendChild(outerDiv);
+        }
     })
 
     socket.on('announce channel', function(data) {
@@ -133,7 +185,7 @@ function main(){
                     channel.style.backgroundColor = "white";
                 }
                 div.style.backgroundColor = "red";
-                // TODO: implement message displaying function
+                displayMessages();
             }
         } else {
             allChannels.appendChild(div);
@@ -147,7 +199,7 @@ function main(){
                     channel.style.backgroundColor = "white";
                 }
                 div.style.backgroundColor = "red";
-                // TODO: implement message displaying function
+                displayMessages();
             }
         }
     })
