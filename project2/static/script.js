@@ -6,6 +6,14 @@ function checkLocalStorage(){
     }
 }
 
+function checkLocalStorageChannel() {
+    if (localStorage.getItem('openedChannel')){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 // function selectChannel(div) {
 //     localStorage.setItem('openedChannel', div.innerHTML);
 //     listOfChannels = div.parentNode.childNodes;
@@ -40,6 +48,7 @@ function displayMessages() {
             outerDiv.appendChild(messageText);
             document.querySelector('#messagesArea').appendChild(outerDiv);
         }
+        document.querySelector('#messagesArea').lastChild.scrollIntoView({behavior: "instant", block: "end", inline: "nearest"});
     }
 
     const form = new FormData();
@@ -50,6 +59,7 @@ function displayMessages() {
 }
 
 function displayYourChannels() {
+    document.querySelector("#yourChannelsList").innerHTML = '';
     const request = new XMLHttpRequest();
     request.open('POST', '/display_your_channels');
     request.onload = function() {
@@ -80,6 +90,7 @@ function displayYourChannels() {
 }
 
 function displayAllChannels() {
+    document.querySelector("#allChannelsList").innerHTML = '';
     const request = new XMLHttpRequest();
     request.open('POST', '/display_all_channels');
     request.onload = function() {
@@ -94,7 +105,6 @@ function displayAllChannels() {
             div.onclick = function() {                                  // I have no idea why this works
                 localStorage.setItem('openedChannel', div.innerHTML);   // and the selectCahnnel function doesn't
                 listOfChannels = div.parentNode.childNodes;
-                console.log(listOfChannels);
                 for (channel of listOfChannels) {
                     channel.style.backgroundColor = "white";
                 }
@@ -118,16 +128,17 @@ function main(){
 
     document.querySelector("#sign-in-form").onsubmit = function() {
         username = document.querySelector("#username").value;
-        document.querySelector("#sign-in").style.display = "none";
+        document.querySelector("#sign-in-row").style.display = "none";
         localStorage.setItem('username', username);
         document.querySelector("#user").innerHTML = localStorage.getItem('username');
         document.querySelector("#main-row").style.pointerEvents = "auto";
         displayYourChannels();
+        displayAllChannels();
         return false;
     }
 
     document.querySelector("#createChannelButton").onclick = function() {
-        document.querySelector("#createChannelDiv").style.display = "block";
+        document.querySelector("#create-channel-row").style.display = "block";
         document.querySelector("#main-row").style.pointerEvents = "none";
     }
 
@@ -135,7 +146,7 @@ function main(){
         document.querySelector("#newChannelSubmit").onclick = function() {
             const channelName = document.querySelector("#channelName").value;
             const channelCreator = localStorage.getItem('username');
-            document.querySelector("#createChannelDiv").style.display = "none";
+            document.querySelector("#create-channel-row").style.display = "none";
             document.querySelector("#main-row").style.pointerEvents = "auto";
             socket.emit('create channel', {'channelName': channelName, 'channelCreator': channelCreator});
         }
@@ -163,6 +174,7 @@ function main(){
             outerDiv.appendChild(senderName);
             outerDiv.appendChild(messageText);
             document.querySelector('#messagesArea').appendChild(outerDiv);
+            outerDiv.scrollIntoView({behavior: "instant", block: "end", inline: "nearest"});
         }
     })
 
@@ -209,12 +221,16 @@ function main(){
     if (checkLocalStorage()){
         document.querySelector("#user").innerHTML = localStorage.getItem('username');
         displayYourChannels();
+        displayAllChannels();
     } else {
-        document.querySelector("#sign-in").style.display = "block";
+        document.querySelector("#sign-in-row").style.display = "block";
         document.querySelector("#main-row").style.pointerEvents = "none";
     }
 
-    displayAllChannels();
+    if (checkLocalStorageChannel()) {
+        displayMessages();
+    }
+
 }
 
 document.addEventListener('DOMContentLoaded', main);

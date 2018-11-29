@@ -10,26 +10,36 @@ html, body {
     & > .row {
         height: 100%;
     }
-    #sign-in-row {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
-    #create-channel-row {
-        position: absolute;
-        top: 0;
-        left: 0;
-    }
 }
 
-#sign-in {
-    display: none;
-    position: fixed;
+#user {
+    height: 5%;
 }
 
-#createChannelDiv {
+.channels-overview {
+    height: 95%;
+}
+
+.channels-overview, #messagesArea {
+    overflow: auto;
+}
+
+#sign-in, #createChannelDiv {
+    background-color: black;
+    margin-top: 10%;
+    height: 50%;
+    padding-top: 10%;
+}
+
+#sign-in-row {
     display: none;
-    position: fixed;
+}
+
+#sign-in-form, #channelName, #newChannelSubmit {
+}
+
+#create-channel-row {
+    display: none;
 }
 
 #left-part {
