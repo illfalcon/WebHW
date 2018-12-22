@@ -1,3 +1,75 @@
 from django.db import models
 
-# Create your models here.
+
+# pizza models
+
+class Dough(models.Model):
+    name = models.CharField(max_length=64)
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Topping(models.Model):
+    name = models.CharField(max_length=64)
+    def __str__(self):
+        return f"{self.name}"
+
+
+class PizzaSize(models.Model):
+    name = models.CharField(max_length=64)
+    def __str__(self):
+        return f"{self.name}"
+
+
+class Pizza(models.Model):
+    dough = models.ForeignKey('Dough', on_delete=models.CASCADE)
+    size = models.ForeignKey('PizzaSize', on_delete=models.CASCADE)
+
+    TOPPINGS_CHOICES = (
+        ('C', 'Cheese'),
+        ('1', '1 topping'),
+        ('2', '2 toppings'),
+        ('3', '3 toppings'),
+        ('S', 'Special')
+    )
+    numOfToppings = models.CharField(max_length=1, choices=TOPPINGS_CHOICES)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f"{self.dough.name} {self.size.name} {self.numOfToppings} - {self.price}"
+
+
+# subs models
+
+class Sub(models.Model):
+    name = models.CharField(max_length=64)
+    base_price = models.DecimalField(max_digits=5, decimal_places=2)
+
+
+class Extra(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+
+# salad models
+
+class Salad(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+
+# pasta models
+
+class Pasta(models.Model):
+    name = models.CharField(max_length=64)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+# platters models
+
+class PlatterSize(models.Model):
+    name = models.CharField(max_length=64)
+
+class DinnerPlatter(models.Model):
+    name = models.CharField(max_length=64)
+    size = models.ForeignKey('PlatterSize', on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
