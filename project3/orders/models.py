@@ -32,7 +32,7 @@ class Pizza(models.Model):
         ('3 toppings', '3 toppings'),
         ('Special', 'Special')
     )
-    numOfToppings = models.CharField(max_length=1, choices=TOPPINGS_CHOICES)
+    numOfToppings = models.CharField(max_length=64, choices=TOPPINGS_CHOICES)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
