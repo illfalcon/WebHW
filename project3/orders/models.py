@@ -51,17 +51,25 @@ class Sub(models.Model):
     size = models.ForeignKey('SubSize', on_delete=models.CASCADE)
     base_price = models.DecimalField(max_digits=5, decimal_places=2)
 
+    def __str__(self):
+        return f'{self.name}, {size.name} - {self.base_price}'
+
 
 class Extra(models.Model):
     name = models.CharField(max_length=64)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
+    def __str__(self):
+        return f'{self.name} - {self.price}'
 
 # salad models
 
 class Salad(models.Model):
     name = models.CharField(max_length=64)
     price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f'{self.name} - {self.price}'
 
 
 # pasta models
@@ -75,7 +83,13 @@ class Pasta(models.Model):
 class PlatterSize(models.Model):
     name = models.CharField(max_length=64)
 
+    def __str__(self):
+        return f'{self.name}'
+
 class DinnerPlatter(models.Model):
     name = models.CharField(max_length=64)
     size = models.ForeignKey('PlatterSize', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return f'{self.name}, {self.size} - {self.price}'
