@@ -60,6 +60,112 @@
                     <button class="add-to-cart btn" id="add-pizza-button"">Add to cart</button>
                 </div>
             </div>
+            <div class="card col-xs-12 col-sm-6 col-lg-4">
+                <div class="box">
+                    <div class="img">
+                        <img src="../../static/orders/icons/spaghetti.png">
+                    </div>
+                    <h2>Pasta</h2>
+                    <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="pasta" id="mozarella" autocomplete="off"> Baked Ziti w/Mozzarella
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="pasta" id="meatballs" autocomplete="off"> Baked Ziti w/Meatballs
+                        </label>
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="pasta" id="chicken" autocomplete="off" checked> Baked Ziti w/Chicken
+                        </label>
+                    </div>
+                    <h5>Price: 9.75$</h5>
+                    <button class="add-to-cart btn" id="add-pasta-button"">Add to cart</button>
+                </div>
+            </div>
+            <div class="card col-xs-12 col-sm-6 col-lg-4">
+                <div class="box">
+                    <div class="img">
+                        <img src="../../static/orders/icons/salad.png">
+                    </div>
+                    <h2>Salads</h2>
+                    <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="salad" id="garden" autocomplete="off"> Garden
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="salad" id="greek" autocomplete="off"> Greek
+                        </label>
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="salad" id="antipasto" autocomplete="off" checked> Antipasto
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="salad" id="tuna" autocomplete="off"> Tuna
+                        </label>
+                    </div>
+                    <h5>Price: 8.25$</h5>
+                    <button class="add-to-cart btn" id="add-salad-button"">Add to cart</button>
+                </div>
+            </div>
+            <div class="card col-xs-12 col-sm-6 col-lg-4 offset-lg-2">
+                <div class="box">
+                    <div class="img">
+                        <img src="../../static/orders/icons/sandwich.png">
+                    </div>
+                    <h2>Subs</h2>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="sub-size" id="small-sub" autocomplete="off" checked> Small
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="sub-size" id="large-sub" autocomplete="off"> Large
+                        </label>
+                    </div>
+                    <div>
+                        <label for="subs">Subs</label>
+                        <select class="form-control" id="subs">
+                            <option>Cheese</option>
+                            <option>Italian</option>
+                            <option>Whatever</option>
+                            <option>Magic</option>
+                        </select>
+                        <label for="extras">Extras</label>
+                        <select class="form-control" id="extras">
+                            <option>Nothing</option>
+                            <option>Extra Cheese +0.50</option>
+                            <option>Onions +0.50</option>
+                            <option>Whatever +1</option>
+                        </select>
+                    </div>
+                    <h5>Price: 8$</h5>
+                    <button class="add-to-cart btn" id="add-sub-button"">Add to cart</button>
+                </div>
+            </div>
+            <div class="card col-xs-12 col-sm-6 col-lg-4">
+                <div class="box">
+                    <div class="img">
+                        <img src="../../static/orders/icons/cutlery.png">
+                    </div>
+                    <h2>Dinner Platters</h2>
+                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                        <label class="btn btn-secondary active">
+                            <input type="radio" name="platter-size" id="small-platter" autocomplete="off" checked> Small
+                        </label>
+                        <label class="btn btn-secondary">
+                            <input type="radio" name="platter-size" id="large-platter" autocomplete="off"> Large
+                        </label>
+                    </div>
+                    <div>
+                        <label for="platters">Platters</label>
+                        <select class="form-control" id="platters">
+                            <option>Garden Salad</option>
+                            <option>Greek Salad</option>
+                            <option>Whatever</option>
+                            <option>Magic</option>
+                        </select>
+                    </div>
+                    <h5>Price: 45$</h5>
+                    <button class="add-to-cart btn" id="add-platter-button"">Add to cart</button>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
