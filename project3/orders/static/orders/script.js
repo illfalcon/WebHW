@@ -19,6 +19,36 @@ function displayPizzas() {
     request.onload = function() {
         const data = JSON.parse(request.responseText);
         console.log(data);
+        const doughs = JSON.parse(data.doughs);
+        let counter = 0;
+        for (const dough of doughs) {
+            const doughChoice = document.querySelector('#pizza-dough-choice');
+            if (counter % 3 === 0) {
+                const buttonGroup = document.createElement('div');
+                buttonGroup.className = 'btn-group';
+                doughChoice.append(buttonGroup);
+            }
+            console.log(dough);
+            console.log(dough.fields);
+            console.log(dough.fields.name);
+            const context = {
+                'name': dough.fields.name,
+                'id': dough.pk
+            }
+            const buttonText = Handlebars.templates.pizzaButton(context);
+            const div = document.createElement('div');
+            div.innerHTML = buttonText;
+            console.log(div);
+            const button = div.firstChild;
+            console.log(button);
+            console.log(button.firstChild);
+            if (counter === 0) {
+                button.classList.add('active');
+                button.firstElementChild.checked = true;
+            }
+            doughChoice.lastChild.append(button);
+            counter++;
+        }
     }
     const form = new FormData();
     const csrftoken = getCookie('csrftoken');
