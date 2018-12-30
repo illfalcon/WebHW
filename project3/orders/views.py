@@ -11,11 +11,13 @@ def index(request):
 def pizzas(request):
     doughs = Dough.objects.all()
     toppings = Topping.objects.all()
+    numOfToppings = NumOfToppings.objects.all()
     pizzaSizes = PizzaSize.objects.all()
     pizzaPrices = Pizza.objects.all()
     doughsData = serializers.serialize("json", doughs)
     toppingsData = serializers.serialize("json", toppings)
+    numOfToppingsData = serializers.serialize("json", numOfToppings)
     pizzaSizesData = serializers.serialize("json", pizzaSizes)
     pizzaPricesData = serializers.serialize("json", pizzaPrices)
-    jsonObject = {"doughs": doughsData, "toppings": toppingsData, "pizzaSizes": pizzaSizesData, "pizzaPrices": pizzaPricesData}
+    jsonObject = {"doughs": doughsData, "toppings": toppingsData, "numOfToppings": numOfToppingsData, "pizzaSizes": pizzaSizesData, "pizzaPrices": pizzaPricesData}
     return JsonResponse(jsonObject)

@@ -10,6 +10,7 @@ admin.site.register(Extra)
 admin.site.register(Pasta)
 admin.site.register(PlatterSize)
 admin.site.register(DinnerPlatter)
+admin.site.register(NumOfToppings)
 
 
 # Register your models here.

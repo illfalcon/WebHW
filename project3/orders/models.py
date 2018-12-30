@@ -14,6 +14,13 @@ class Topping(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+class NumOfToppings(models.Model):
+    name = models.CharField(max_length=64)
+    num = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.name}"
+
 
 class PizzaSize(models.Model):
     name = models.CharField(max_length=64)
@@ -24,19 +31,11 @@ class PizzaSize(models.Model):
 class Pizza(models.Model):
     dough = models.ForeignKey('Dough', on_delete=models.CASCADE)
     size = models.ForeignKey('PizzaSize', on_delete=models.CASCADE)
-
-    TOPPINGS_CHOICES = (
-        ('Cheese', 'Cheese'),
-        ('1 topping', '1 topping'),
-        ('2 toppings', '2 toppings'),
-        ('3 toppings', '3 toppings'),
-        ('Special', 'Special')
-    )
-    numOfToppings = models.CharField(max_length=64, choices=TOPPINGS_CHOICES)
+    numOfToppings = models.ForeignKey('NumOfToppings', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f"{self.dough.name} {self.size.name} {self.numOfToppings} - {self.price}"
+        return f"{self.dough.name} {self.size.name} {self.numOfToppings.name} - {self.price}"
 
 
 # subs models
