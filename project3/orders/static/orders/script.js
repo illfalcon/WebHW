@@ -59,16 +59,32 @@ function displayPizzas() {
     request.open('POST', '/pizzas');
     request.onload = function() {
         const data = JSON.parse(request.responseText);
+        const pizzaPrices = JSON.parse(data.pizzaPrices);
         const doughs = JSON.parse(data.doughs);
         console.log(data);
         const doughChoice = document.querySelector('#pizza-dough-choice');
         addButtons(doughChoice, doughs);
+
+        const doughButtonGroups = doughChoice.children;
+        for (let i = 0; i < doughButtonGroups.length; i++) {
+            const buttonGroup = doughButtonGroups[i];
+            const buttons = buttonGroup.children;
+            for (let j = 0; j < buttons.length; j++) {
+                const button = buttons[j];
+                button.onclick = function () {
+                    this.parentNode.parentNode.querySelector('.active').classList.remove('active');
+                    this.classList.add('active'); //yes, a workaround
+                    calculatePizzaPrice(pizzaPrices);
+                }
+            }
+        }
+
         const numOfToppings = JSON.parse(data.numOfToppings);
         const numOfToppingsChoice = document.querySelector('#pizza-topping-choice');
         addButtons(numOfToppingsChoice, numOfToppings);
+
         const toppingButtonGroups = numOfToppingsChoice.children;
         const toppingList = JSON.parse(data.toppings);
-        const pizzaPrices = JSON.parse(data.pizzaPrices);
         for (let i = 0; i < toppingButtonGroups.length; i++) {
             const buttonGroup = toppingButtonGroups[i];
             const buttons = buttonGroup.children;
@@ -87,9 +103,25 @@ function displayPizzas() {
                 }
             }
         }
+
         const pizzaSizes = JSON.parse(data.pizzaSizes);
         const pizzaSizesChoice = document.querySelector('#pizza-size-choice');
         addButtons(pizzaSizesChoice, pizzaSizes);
+
+        const pizzaSizesButtonGroups = pizzaSizesChoice.children;
+        for (let i = 0; i < pizzaSizesButtonGroups.length; i++) {
+            const buttonGroup = pizzaSizesButtonGroups[i];
+            const buttons = buttonGroup.children;
+            for (let j = 0; j < buttons.length; j++) {
+                const button = buttons[j];
+                button.onclick = function () {
+                    this.parentNode.parentNode.querySelector('.active').classList.remove('active');
+                    this.classList.add('active'); //yes, a workaround
+                    calculatePizzaPrice(pizzaPrices);
+                }
+            }
+        }
+
         calculatePizzaPrice(pizzaPrices);
     }
     const form = new FormData();
