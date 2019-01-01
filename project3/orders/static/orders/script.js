@@ -81,6 +81,9 @@ function displayPizzas() {
                     }).fields.num;
                     const container = document.querySelector('#topping-container');
                     addSelections(container, num, toppingList);
+                    this.parentNode.parentNode.querySelector('.active').classList.remove('active');
+                    this.classList.add('active'); //yes, a workaround
+                    calculatePizzaPrice(pizzaPrices);
                 }
             }
         }
