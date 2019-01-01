@@ -1,8 +1,8 @@
 function getCookie(cname) {
-  var name = cname + "=";
-  var ca = document.cookie.split(';');
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
+  const name = cname + "=";
+  const ca = document.cookie.split(';');
+  for(const i = 0; i < ca.length; i++) {
+    const c = ca[i];
     while (c.charAt(0) == ' ') {
       c = c.substring(1);
     }
@@ -19,7 +19,7 @@ function addButtons(container, list) {
         if (counter % 3 === 0) {
             const buttonGroup = document.createElement('div');
             buttonGroup.className = 'btn-group';
-            container.append(buttonGroup);
+            container.appendChild(buttonGroup);
         }
         const context = {
             'model': item.model,
@@ -34,7 +34,7 @@ function addButtons(container, list) {
             button.classList.add('active');
             // button.checked = true;
         }
-        container.lastChild.append(button);
+        container.lastChild.appendChild(button);
         counter++;
     }
 }
@@ -50,11 +50,11 @@ function addSelections(container, num, options) {
         const div = document.createElement('div');
         div.innerHTML = selectionText;
         const selection = div.firstChild;
-        container.append(selection);
+        container.appendChild(selection);
     }
 }
 
-function displayPizzas() {
+function displayPizzas(arrayOfPizzaArrays) {
     const request = new XMLHttpRequest();
     request.open('POST', '/pizzas');
     request.onload = function() {
@@ -86,37 +86,7 @@ function displayPizzas() {
         const pizzaSizes = JSON.parse(data.pizzaSizes);
         const pizzaSizesChoice = document.querySelector('#pizza-size-choice');
         addButtons(pizzaSizesChoice, pizzaSizes);
-    //     let counter = 0;
-    //     for (const dough of doughs) {
-    //         const doughChoice = document.querySelector('#pizza-dough-choice');
-    //         if (counter % 3 === 0) {
-    //             const buttonGroup = document.createElement('div');
-    //             buttonGroup.className = 'btn-group';
-    //             doughChoice.append(buttonGroup);
-    //         }
-    //         console.log(dough);
-    //         console.log(dough.fields);
-    //         console.log(dough.fields.name);
-    //         const context = {
-    //             'name': dough.fields.name,
-    //             'id': dough.pk
-    //         }
-    //         const buttonText = Handlebars.templates.pizzaButton(context);
-    //         const div = document.createElement('div');
-    //         div.innerHTML = buttonText;
-    //         console.log(div);
-    //         const button = div.firstChild;
-    //         console.log(button);
-    //         console.log(button.firstChild);
-    //         if (counter === 0) {
-    //             button.classList.add('active');
-    //             button.firstElementChild.checked = true;
-    //         }
-    //         doughChoice.lastChild.append(button);
-    //         counter++;
-    //     }
     }
-
     const form = new FormData();
     const csrftoken = getCookie('csrftoken');
     form.append('csrfmiddlewaretoken', csrftoken);
@@ -124,8 +94,17 @@ function displayPizzas() {
     return false;
 }
 
+function calculatePizzaPrice() {
+    const doughChoiceContainer = document.getElementById('pizza-dough-choice');
+    const toppingChoiceContainer = document.querySelector('#pizza-topping-choice');
+    const sizeChoiceContainer = document.querySelector('#pizza-size-choice');
+    // const toppingChoice = toppingChoiceContainer.querySelector('.active').firstElementChild.value;
+    // const sizeChoice = sizeChoiceContainer.querySelector('.active').firstElementChild.value;
+}
+
 function main() {
     displayPizzas();
+    calculatePizzaPrice();
 }
 
 document.addEventListener('DOMContentLoaded', main);
