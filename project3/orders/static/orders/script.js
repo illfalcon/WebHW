@@ -151,8 +151,53 @@ function calculatePizzaPrice(pizzaPrices) {
     }
 }
 
+function displaySalads() {
+    const request = new XMLHttpRequest();
+    request.open('POST', '/salads');
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+        const salads = JSON.parse(data.salads);
+        const saladContainer = document.querySelector('#salad-choice');
+        addButtons(saladContainer, salads);
+
+        const saladButtonGroups = saladContainer.children;
+        for (let i = 0; i < saladButtonGroups.length; i++) {
+            const buttonGroup = saladButtonGroups[i];
+            const buttons = buttonGroup.children;
+            for (let j = 0; j < buttons.length; j++) {
+                const button = buttons[j];
+                button.onclick = function () {
+                    this.parentNode.parentNode.querySelector('.active').classList.remove('active');
+                    this.classList.add('active'); //yes, a workaround
+                    calculateSaladPrice(salads);
+                }
+            }
+        }
+        calculateSaladPrice(salads);
+    }
+    const form = new FormData();
+    const csrftoken = getCookie('csrftoken');
+    form.append('csrfmiddlewaretoken', csrftoken);
+    request.send(form);
+    return false;
+}
+
+function calculateSaladPrice(salads) {
+    const saladChoiceContainer = document.querySelector('#salad-choice');
+    console.log(saladChoiceContainer);
+    const saladChoice = saladChoiceContainer.querySelector('.active').firstElementChild.value;
+    const price = salads.find(e => e.pk == saladChoice).fields.price;
+    const priceContainer = document.querySelector('#salad-price-container');
+    if (price) {
+        priceContainer.innerHTML = 'Price: ' + price + '$';
+    } else {
+        priceContainer.innerHTML = 'Unavailiable';
+    }
+}
+
 function main() {
     displayPizzas();
+    displaySalads();
 }
 
 document.addEventListener('DOMContentLoaded', main);

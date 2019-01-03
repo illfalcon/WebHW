@@ -31,7 +31,7 @@
                         <img src="../../static/orders/icons/spaghetti.png">
                     </div>
                     <h2>Pasta</h2>
-                    <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons">
+                    <div class="btn-group-vertical btn-group-toggle" id="pasta-choice" data-toggle="buttons">
                         <label class="btn btn-secondary">
                             <input type="radio" name="pasta" id="mozarella" autocomplete="off"> Baked Ziti w/Mozzarella
                         </label>
@@ -52,21 +52,9 @@
                         <img src="../../static/orders/icons/salad.png">
                     </div>
                     <h2>Salads</h2>
-                    <div class="btn-group-vertical btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="salad" id="garden" autocomplete="off"> Garden
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="salad" id="greek" autocomplete="off"> Greek
-                        </label>
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="salad" id="antipasto" autocomplete="off" checked> Antipasto
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="salad" id="tuna" autocomplete="off"> Tuna
-                        </label>
+                    <div class="btn-group-vertical btn-group-toggle" id="salad-choice" data-toggle="buttons">
                     </div>
-                    <h5>Price: 8.25$</h5>
+                    <h5 id="salad-price-container"></h5>
                     <button class="add-to-cart btn" id="add-salad-button"">Add to cart</button>
                 </div>
             </div>

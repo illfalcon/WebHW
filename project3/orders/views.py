@@ -21,3 +21,9 @@ def pizzas(request):
     pizzaPricesData = serializers.serialize("json", pizzaPrices)
     jsonObject = {"doughs": doughsData, "toppings": toppingsData, "numOfToppings": numOfToppingsData, "pizzaSizes": pizzaSizesData, "pizzaPrices": pizzaPricesData}
     return JsonResponse(jsonObject)
+
+def salads(request):
+    salads = Salad.objects.all()
+    saladsData = serializers.serialize('json', salads)
+    jsonObject = {'salads': saladsData}
+    return JsonResponse(jsonObject)
