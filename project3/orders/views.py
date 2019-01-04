@@ -33,3 +33,15 @@ def pastas(request):
     pastasData = serializers.serialize('json', pastas)
     jsonObject = {'pastas': pastasData}
     return JsonResponse(jsonObject)
+
+def subs(request):
+    subs = Sub.objects.all()
+    fillings = SubFilling.objects.all()
+    sizes = SubSize.objects.all()
+    extras = Extra.objects.all()
+    subsData = serializers.serialize('json', subs)
+    fillingsData = serializers.serialize('json', fillings)
+    sizesData = serializers.serialize('json', sizes)
+    extrasData = serializers.serialize('json', extras)
+    jsonObject = {'fillings': fillingsData, 'sizes': sizesData, 'subs': subsData, 'extras': extrasData}
+    return JsonResponse(jsonObject)

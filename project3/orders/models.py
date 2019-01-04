@@ -45,13 +45,19 @@ class SubSize(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-class Sub(models.Model):
+class SubFilling(models.Model):
     name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return f'{self.name}'
+
+class Sub(models.Model):
+    filling = models.ForeignKey('SubFilling', on_delete=models.CASCADE)
     size = models.ForeignKey('SubSize', on_delete=models.CASCADE)
     base_price = models.DecimalField(max_digits=5, decimal_places=2)
 
     def __str__(self):
-        return f'{self.name}, {size.name} - {self.base_price}'
+        return f'{self.filling.name}, {self.size.name} - {self.base_price}'
 
 
 class Extra(models.Model):

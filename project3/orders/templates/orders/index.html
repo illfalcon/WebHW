@@ -55,31 +55,17 @@
                         <img src="../../static/orders/icons/sandwich.png">
                     </div>
                     <h2>Subs</h2>
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="sub-size" id="small-sub" autocomplete="off" checked> Small
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="sub-size" id="large-sub" autocomplete="off"> Large
-                        </label>
+                    <div class="btn-group-vertical btn-group-toggle" id="sub-size-choice" data-toggle="buttons">
                     </div>
                     <div>
-                        <label for="subs">Subs</label>
-                        <select class="form-control" id="subs">
-                            <option>Cheese</option>
-                            <option>Italian</option>
-                            <option>Whatever</option>
-                            <option>Magic</option>
-                        </select>
-                        <label for="extras">Extras</label>
-                        <select class="form-control" id="extras">
-                            <option>Nothing</option>
-                            <option>Extra Cheese +0.50</option>
-                            <option>Onions +0.50</option>
-                            <option>Whatever +1</option>
-                        </select>
+                        <h2>Subs</h2>
+                        <div id="subs-choice">
+                        </div>
+                        <h2>Extras</h2>
+                        <div class="btn-group-vertical btn-group-toggle" id="extras-choice">
+                        </div>
                     </div>
-                    <h5>Price: 8$</h5>
+                    <h5 id="sub-price-container"></h5>
                     <button class="add-to-cart btn" id="add-sub-button"">Add to cart</button>
                 </div>
             </div>

@@ -44,11 +44,39 @@ function addButtons(container, list, threeInARowBool) {
     }
 }
 
+function addCheckBoxes(container, list, threeInARowBool) {
+    let counter = 0;
+    for (const item of list) {
+        if (threeInARowBool){
+            if (counter % 3 === 0) {
+                const buttonGroup = document.createElement('div');
+                buttonGroup.className = 'btn-group';
+                container.appendChild(buttonGroup);
+            }
+        }
+        const context = {
+            'model': item.model,
+            'name': item.fields.name,
+            'id': item.pk
+        };
+        const buttonText = Handlebars.templates.checkBoxButton(context);
+        const div = document.createElement('div');
+        div.innerHTML = buttonText;
+        const button = div.firstChild;
+        if (threeInARowBool) {
+            container.lastChild.appendChild(button);
+        }
+        else {
+            container.appendChild(button);
+        }
+        counter++;
+    }
+}
+
 function addSelections(container, num, options) {
     container.innerHTML = '';
     for (let i = 0; i < num; i++) {
         const context = {
-            "number": i+1,
             "options": options
         };
         const selectionText = Handlebars.templates.toppingSelectionTemplate(context);
@@ -234,10 +262,97 @@ function calculatePastaPrice(pastas) {
     }
 }
 
+function displaySubs() {
+    const request = new XMLHttpRequest();
+    request.open('POST', '/subs');
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+        const sizes = JSON.parse(data.sizes);
+        const sizeChoiceContainer = document.querySelector('#sub-size-choice');
+        addButtons(sizeChoiceContainer, sizes, true);
+        const subs = JSON.parse(data.fillings);
+        const subsContainer = document.querySelector('#subs-choice');
+        addSelections(subsContainer, 1, subs);
+        const extras = JSON.parse(data.extras);
+        const extrasContainer = document.querySelector('#extras-choice');
+        addCheckBoxes(extrasContainer, extras, true);
+
+        const subPrices = JSON.parse(data.subs);
+
+        const sizeButtonGroups = sizeChoiceContainer.children;
+        for (let i = 0; i < sizeButtonGroups.length; i++) {
+            const buttonGroup = sizeButtonGroups[i];
+            const buttons = buttonGroup.children;
+            for (let j = 0; j < buttons.length; j++) {
+                const button = buttons[j];
+                button.onclick = function () {
+                    this.parentNode.parentNode.querySelector('.active').classList.remove('active');
+                    this.classList.add('active'); //yes, a workaround
+                    calculateSubPrice(subPrices, extras);
+                }
+            }
+        }
+
+        subsContainer.firstElementChild.onchange = function() {
+            calculateSubPrice(subPrices, extras);
+        }
+        const extrasButtonGroups = extrasContainer.children;
+        for (let i = 0; i < extrasButtonGroups.length; i++) {
+            const buttonGroup = extrasButtonGroups[i];
+            const buttons = buttonGroup.children;
+            for (let j = 0; j < buttons.length; j++) {
+                const button = buttons[j];
+                button.onclick = function () {
+                    this.classList.toggle('active');
+                    calculateSubPrice(subPrices, extras);
+                }
+            }
+        }
+        calculateSubPrice(subPrices, extras);
+    }
+    const form = new FormData();
+    const csrftoken = getCookie('csrftoken');
+    form.append('csrfmiddlewaretoken', csrftoken);
+    request.send(form);
+    return false;
+}
+
+function calculateSubPrice(subPrices, extras) {
+    const subsChoiceContainer = document.querySelector('#subs-choice');
+    const selectedIndex = subsChoiceContainer.firstElementChild.selectedIndex;
+    const subChoice = subsChoiceContainer.firstElementChild.options[selectedIndex].value;
+
+    const subSizeChoiceContainer = document.querySelector('#sub-size-choice');
+    const subSizeChoice = subSizeChoiceContainer.querySelector('.active').firstElementChild.value;
+    const subPriceFound = subPrices.find(e => e.fields.filling == subChoice && e.fields.size == subSizeChoice);
+    let subPrice = 0;
+    if (subPriceFound) {
+        subPrice = subPriceFound.fields.base_price;
+    }
+
+
+    const extraChoiceContainer = document.querySelector('#extras-choice');
+    const extraChoices = extraChoiceContainer.querySelectorAll('.active');
+    let extraSum = 0;
+    if (extraChoices) {
+        for (let extraChoice of extraChoices) {
+            extraSum += parseFloat(extras.find(e => e.pk == extraChoice.value).fields.price);
+        }
+    }
+    const price = parseFloat(subPrice) + parseFloat(extraSum);
+    const priceContainer = document.querySelector('#sub-price-container');
+    if (subPriceFound) {
+        priceContainer.innerHTML = 'Price: ' + price + '$';
+    } else {
+        priceContainer.innerHTML = 'Unavailiable';
+    }
+}
+
 function main() {
     displayPizzas();
     displaySalads();
     displayPastas();
+    displaySubs();
 }
 
 document.addEventListener('DOMContentLoaded', main);
