@@ -27,3 +27,9 @@ def salads(request):
     saladsData = serializers.serialize('json', salads)
     jsonObject = {'salads': saladsData}
     return JsonResponse(jsonObject)
+
+def pastas(request):
+    pastas = Pasta.objects.all()
+    pastasData = serializers.serialize('json', pastas)
+    jsonObject = {'pastas': pastasData}
+    return JsonResponse(jsonObject)

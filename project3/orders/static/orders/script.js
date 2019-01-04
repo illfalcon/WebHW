@@ -13,13 +13,15 @@ function getCookie(cname) {
   return "";
 }
 
-function addButtons(container, list) {
+function addButtons(container, list, threeInARowBool) {
     let counter = 0;
     for (const item of list) {
-        if (counter % 3 === 0) {
-            const buttonGroup = document.createElement('div');
-            buttonGroup.className = 'btn-group';
-            container.appendChild(buttonGroup);
+        if (threeInARowBool){
+            if (counter % 3 === 0) {
+                const buttonGroup = document.createElement('div');
+                buttonGroup.className = 'btn-group';
+                container.appendChild(buttonGroup);
+            }
         }
         const context = {
             'model': item.model,
@@ -34,7 +36,10 @@ function addButtons(container, list) {
             button.classList.add('active');
             // button.checked = true;
         }
-        container.lastChild.appendChild(button);
+        if (threeInARowBool)
+            container.lastChild.appendChild(button);
+        else
+            container.appendChild(button);
         counter++;
     }
 }
@@ -63,7 +68,7 @@ function displayPizzas() {
         const doughs = JSON.parse(data.doughs);
         console.log(data);
         const doughChoice = document.querySelector('#pizza-dough-choice');
-        addButtons(doughChoice, doughs);
+        addButtons(doughChoice, doughs, true);
 
         const doughButtonGroups = doughChoice.children;
         for (let i = 0; i < doughButtonGroups.length; i++) {
@@ -81,7 +86,7 @@ function displayPizzas() {
 
         const numOfToppings = JSON.parse(data.numOfToppings);
         const numOfToppingsChoice = document.querySelector('#pizza-topping-choice');
-        addButtons(numOfToppingsChoice, numOfToppings);
+        addButtons(numOfToppingsChoice, numOfToppings, true);
 
         const toppingButtonGroups = numOfToppingsChoice.children;
         const toppingList = JSON.parse(data.toppings);
@@ -106,7 +111,7 @@ function displayPizzas() {
 
         const pizzaSizes = JSON.parse(data.pizzaSizes);
         const pizzaSizesChoice = document.querySelector('#pizza-size-choice');
-        addButtons(pizzaSizesChoice, pizzaSizes);
+        addButtons(pizzaSizesChoice, pizzaSizes, true);
 
         const pizzaSizesButtonGroups = pizzaSizesChoice.children;
         for (let i = 0; i < pizzaSizesButtonGroups.length; i++) {
@@ -158,19 +163,15 @@ function displaySalads() {
         const data = JSON.parse(request.responseText);
         const salads = JSON.parse(data.salads);
         const saladContainer = document.querySelector('#salad-choice');
-        addButtons(saladContainer, salads);
+        addButtons(saladContainer, salads, false);
 
-        const saladButtonGroups = saladContainer.children;
-        for (let i = 0; i < saladButtonGroups.length; i++) {
-            const buttonGroup = saladButtonGroups[i];
-            const buttons = buttonGroup.children;
-            for (let j = 0; j < buttons.length; j++) {
-                const button = buttons[j];
-                button.onclick = function () {
-                    this.parentNode.parentNode.querySelector('.active').classList.remove('active');
-                    this.classList.add('active'); //yes, a workaround
-                    calculateSaladPrice(salads);
-                }
+        const buttons = saladContainer.children;
+        for (let j = 0; j < buttons.length; j++) {
+            const button = buttons[j];
+            button.onclick = function () {
+                this.parentNode.querySelector('.active').classList.remove('active');
+                this.classList.add('active'); //yes, a workaround
+                calculateSaladPrice(salads);
             }
         }
         calculateSaladPrice(salads);
@@ -184,7 +185,6 @@ function displaySalads() {
 
 function calculateSaladPrice(salads) {
     const saladChoiceContainer = document.querySelector('#salad-choice');
-    console.log(saladChoiceContainer);
     const saladChoice = saladChoiceContainer.querySelector('.active').firstElementChild.value;
     const price = salads.find(e => e.pk == saladChoice).fields.price;
     const priceContainer = document.querySelector('#salad-price-container');
@@ -195,9 +195,49 @@ function calculateSaladPrice(salads) {
     }
 }
 
+function displayPastas() {
+    const request = new XMLHttpRequest();
+    request.open('POST', '/pastas');
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+        const pastas = JSON.parse(data.pastas);
+        const pastasContainer = document.querySelector('#pastas-choice');
+        addButtons(pastasContainer, pastas, false);
+
+        const buttons = pastasContainer.children;
+        for (let i = 0; i < buttons.length; i++) {
+            const button = buttons[i];
+            button.onclick = function () {
+                this.parentNode.querySelector('.active').classList.remove('active');
+                this.classList.add('active'); //yes, a workaround
+                calculatePastaPrice(pastas);
+            }
+        }
+        calculatePastaPrice(pastas);
+    }
+    const form = new FormData();
+    const csrftoken = getCookie('csrftoken');
+    form.append('csrfmiddlewaretoken', csrftoken);
+    request.send(form);
+    return false;
+}
+
+function calculatePastaPrice(pastas) {
+    const pastasChoiceContainer = document.querySelector('#pastas-choice');
+    const pastaChoice = pastasChoiceContainer.querySelector('.active').firstElementChild.value;
+    const price = pastas.find(e => e.pk == pastaChoice).fields.price;
+    const priceContainer = document.querySelector('#pasta-price-container');
+    if (price) {
+        priceContainer.innerHTML = 'Price: ' + price + '$';
+    } else {
+        priceContainer.innerHTML = 'Unavailiable';
+    }
+}
+
 function main() {
     displayPizzas();
     displaySalads();
+    displayPastas();
 }
 
 document.addEventListener('DOMContentLoaded', main);
