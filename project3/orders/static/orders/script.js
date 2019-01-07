@@ -214,6 +214,7 @@ function displaySalads() {
                 calculateSaladPrice(salads);
             }
         }
+        addSaladCartButton(salads);
         calculateSaladPrice(salads);
     }
     const form = new FormData();
@@ -450,6 +451,31 @@ function addPizzaCartButton(pizzaPrices, toppings) {
         console.log(JSON.parse(localStorage.getItem('cart')));
         let cart = JSON.parse(localStorage.getItem('cart'));
         cart.pizzas.push(newPizzaOrder);
+        cart.total += parseFloat(price);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log(localStorage.getItem('cart'));
+    }
+}
+
+function addSaladCartButton(salads) {
+    const addSaladButton = document.querySelector('#add-salad-button');
+    addSaladButton.onclick = function() {
+        const saladChoiceContainer = document.querySelector('#salad-choice');
+        const saladChoice = saladChoiceContainer.querySelector('.active').firstElementChild.value;
+        const salad = salads.find(e => e.pk == saladChoice);
+        const price = salad.fields.price;
+        const priceContainer = document.querySelector('#salad-price-container');
+        if (price) {
+            priceContainer.innerHTML = 'Price: ' + price + '$';
+        } else {
+            priceContainer.innerHTML = 'Unavailiable';
+        }
+        let newSaladOrder = {
+            salad: salad,
+            price: price
+        }
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.salads.push(newSaladOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
         console.log(localStorage.getItem('cart'));
