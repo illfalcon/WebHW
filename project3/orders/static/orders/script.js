@@ -348,11 +348,67 @@ function calculateSubPrice(subPrices, extras) {
     }
 }
 
+function displayPlatters() {
+    const request = new XMLHttpRequest();
+    request.open('POST', '/platters');
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+        const sizes = JSON.parse(data.sizes);
+        const sizeChoiceContainer = document.querySelector('#platter-size-choice');
+        addButtons(sizeChoiceContainer, sizes, true);
+        const platterNames = JSON.parse(data.names);
+        const plattersContainer = document.querySelector('#platter-choice');
+        addSelections(plattersContainer, 1, platterNames);
+        const platters = JSON.parse(data.platters);
+
+        const sizeButtonGroups = sizeChoiceContainer.children;
+        for (let i = 0; i < sizeButtonGroups.length; i++) {
+            const buttonGroup = sizeButtonGroups[i];
+            const buttons = buttonGroup.children;
+            for (let j = 0; j < buttons.length; j++) {
+                const button = buttons[j];
+                button.onclick = function () {
+                    this.parentNode.parentNode.querySelector('.active').classList.remove('active');
+                    this.classList.add('active'); //yes, a workaround
+                    calculatePlatterPrice(platters);
+                }
+            }
+        }
+
+        plattersContainer.firstElementChild.onchange = function() {
+            calculatePlatterPrice(platters);
+        }
+        calculatePlatterPrice(platters);
+    }
+    const form = new FormData();
+    const csrftoken = getCookie('csrftoken');
+    form.append('csrfmiddlewaretoken', csrftoken);
+    request.send(form);
+    return false;
+}
+
+function calculatePlatterPrice(platters) {
+    const platterChoiceContainer = document.querySelector('#platter-choice');
+    const selectedIndex = platterChoiceContainer.firstElementChild.selectedIndex;
+    const platterChoice = platterChoiceContainer.firstElementChild.options[selectedIndex].value;
+
+    const platterSizeChoiceContainer = document.querySelector('#platter-size-choice');
+    const platterSizeChoice = platterSizeChoiceContainer.querySelector('.active').firstElementChild.value;
+    const price = platters.find(e => e.fields.name == platterChoice && e.fields.size == platterSizeChoice).fields.price;
+    const priceContainer = document.querySelector('#platter-price-container');
+    if (price) {
+        priceContainer.innerHTML = 'Price: ' + price + '$';
+    } else {
+        priceContainer.innerHTML = 'Unavailiable';
+    }
+}
+
 function main() {
     displayPizzas();
     displaySalads();
     displayPastas();
     displaySubs();
+    displayPlatters();
 }
 
 document.addEventListener('DOMContentLoaded', main);

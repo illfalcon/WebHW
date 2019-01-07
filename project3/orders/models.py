@@ -93,8 +93,14 @@ class PlatterSize(models.Model):
     def __str__(self):
         return f'{self.name}'
 
-class DinnerPlatter(models.Model):
+class PlatterName(models.Model):
     name = models.CharField(max_length=64)
+
+    def __str__(self):
+        return f'{self.name}'
+
+class DinnerPlatter(models.Model):
+    name = models.ForeignKey('PlatterName', on_delete=models.CASCADE)
     size = models.ForeignKey('PlatterSize', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=5, decimal_places=2)
 

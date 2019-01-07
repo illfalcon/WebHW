@@ -14,6 +14,7 @@ admin.site.register(NumOfToppings)
 admin.site.register(Salad)
 admin.site.register(SubSize)
 admin.site.register(SubFilling)
+admin.site.register(PlatterName)
 
 
 # Register your models here.

@@ -45,3 +45,13 @@ def subs(request):
     extrasData = serializers.serialize('json', extras)
     jsonObject = {'fillings': fillingsData, 'sizes': sizesData, 'subs': subsData, 'extras': extrasData}
     return JsonResponse(jsonObject)
+
+def platters(request):
+    sizes = PlatterSize.objects.all()
+    names = PlatterName.objects.all()
+    platters = DinnerPlatter.objects.all()
+    sizesData = serializers.serialize('json', sizes)
+    namesData = serializers.serialize('json', names)
+    plattersData = serializers.serialize('json', platters)
+    jsonObject = {'sizes': sizesData, 'names': namesData, 'platters': plattersData}
+    return JsonResponse(jsonObject)

@@ -75,24 +75,14 @@
                         <img src="../../static/orders/icons/cutlery.png">
                     </div>
                     <h2>Dinner Platters</h2>
-                    <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                        <label class="btn btn-secondary active">
-                            <input type="radio" name="platter-size" id="small-platter" autocomplete="off" checked> Small
-                        </label>
-                        <label class="btn btn-secondary">
-                            <input type="radio" name="platter-size" id="large-platter" autocomplete="off"> Large
-                        </label>
+                    <div class="btn-group-vertical btn-group-toggle" id="platter-size-choice" data-toggle="buttons">
                     </div>
                     <div>
-                        <label for="platters">Platters</label>
-                        <select class="form-control" id="platters">
-                            <option>Garden Salad</option>
-                            <option>Greek Salad</option>
-                            <option>Whatever</option>
-                            <option>Magic</option>
-                        </select>
+                        <h2>Platters</h2>
+                        <div id="platter-choice">
+                        </div>
                     </div>
-                    <h5>Price: 45$</h5>
+                    <h5 id="platter-price-container">Price: 45$</h5>
                     <button class="add-to-cart btn" id="add-platter-button"">Add to cart</button>
                 </div>
             </div>
