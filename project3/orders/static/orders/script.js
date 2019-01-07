@@ -1,3 +1,19 @@
+function localStorageInit() {
+    if (!localStorage.getItem('cart')) {
+        let cart = {
+            pizzas: [],
+            pastas: [],
+            salads: [],
+            subs: [],
+            platters: [],
+            total: 0
+        }
+        console.log(cart);
+        console.log(JSON.stringify(cart));
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+}
+
 function getCookie(cname) {
   const name = cname + "=";
   const ca = document.cookie.split(';');
@@ -154,7 +170,7 @@ function displayPizzas() {
                 }
             }
         }
-
+        addPizzaCartButton(pizzaPrices, toppingList);
         calculatePizzaPrice(pizzaPrices);
     }
     const form = new FormData();
@@ -165,16 +181,12 @@ function displayPizzas() {
 }
 
 function calculatePizzaPrice(pizzaPrices) {
-    console.log(pizzaPrices);
     const doughChoiceContainer = document.querySelector('#pizza-dough-choice');
     const doughChoiceValue = doughChoiceContainer.querySelector('.active').firstElementChild.value;
-    console.log(doughChoiceValue);
     const toppingChoiceContainer = document.querySelector('#pizza-topping-choice');
     const toppingChoiceValue = toppingChoiceContainer.querySelector('.active').firstElementChild.value;
-    console.log(toppingChoiceValue);
     const sizeChoiceContainer = document.querySelector('#pizza-size-choice');
     const sizeChoiceValue = sizeChoiceContainer.querySelector('.active').firstElementChild.value;
-    console.log(sizeChoiceValue);
     const price = pizzaPrices.find(e => e.fields.dough == doughChoiceValue && e.fields.numOfToppings == toppingChoiceValue && e.fields.size == sizeChoiceValue).fields.price;
     const priceContainer = document.querySelector('#pizza-price');
     if (price) {
@@ -403,7 +415,49 @@ function calculatePlatterPrice(platters) {
     }
 }
 
+function addPizzaCartButton(pizzaPrices, toppings) {
+    const addPizzaButton = document.querySelector('#add-pizza-button');
+    addPizzaButton.onclick = function() {
+        const doughChoiceContainer = document.querySelector('#pizza-dough-choice');
+        const doughChoiceValue = doughChoiceContainer.querySelector('.active').firstElementChild.value;
+        const toppingChoiceContainer = document.querySelector('#pizza-topping-choice');
+        const toppingChoiceValue = toppingChoiceContainer.querySelector('.active').firstElementChild.value;
+        const sizeChoiceContainer = document.querySelector('#pizza-size-choice');
+        const sizeChoiceValue = sizeChoiceContainer.querySelector('.active').firstElementChild.value;
+        const pizza = pizzaPrices.find(e => e.fields.dough == doughChoiceValue && e.fields.numOfToppings == toppingChoiceValue && e.fields.size == sizeChoiceValue);
+        const price = pizza.fields.price;
+        const toppingContainer = document.querySelector('#topping-container');
+        const toppingSelections = toppingContainer.children;
+        console.log(toppingSelections);
+        const toppingChoices = [];
+        for (let topping of toppingSelections) {
+            let selectedIndex = topping.selectedIndex;
+            let toppingChoice = topping.options[selectedIndex].value;
+            let selection = toppings.find(e => e.pk == toppingChoice);
+            toppingChoices.push(selection)
+        }
+        const priceContainer = document.querySelector('#pizza-price');
+        if (price) {
+            priceContainer.innerHTML = 'Price: ' + price + '$';
+        } else {
+            priceContainer.innerHTML = 'Unavailiable';
+        }
+        let newPizzaOrder = {
+            pizza: pizza,
+            toppings: toppingChoices,
+            price: price
+        }
+        console.log(JSON.parse(localStorage.getItem('cart')));
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.pizzas.push(newPizzaOrder);
+        cart.total += parseFloat(price);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log(localStorage.getItem('cart'));
+    }
+}
+
 function main() {
+    localStorageInit();
     displayPizzas();
     displaySalads();
     displayPastas();
