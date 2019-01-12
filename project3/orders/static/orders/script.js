@@ -510,7 +510,7 @@ function addPastaCartButton(pastas) {
     }
 }
 
-function addSubCartButton(subs, extras) {
+function addSubCartButton(subPrices, extras) {
     const addSubButton = document.querySelector('#add-sub-button');
     addSubButton.onclick = function() {
         const subsChoiceContainer = document.querySelector('#subs-choice');
@@ -583,8 +583,23 @@ function addPlatterCartButton(platters) {
     }
 }
 
+function displayCart() {
+    const cartButton = document.querySelector('#cart-button');
+    cartButton.onclick = function() {
+        const menu = document.querySelector('#menu-row');
+        menu.classList.add('disabled-custom');
+        const cartText = Handlebars.templates.cart();
+        const div = document.createElement('div');
+        div.innerHTML = cartText;
+        const cart = div.firstElementChild;
+        const cartRow = document.querySelector('#cart-row');;
+        cartRow.appendChild(cart);
+    }
+}
+
 function main() {
     localStorageInit();
+    displayCart();
     displayPizzas();
     displaySalads();
     displayPastas();

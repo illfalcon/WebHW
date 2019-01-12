@@ -44,3 +44,13 @@
 .add-to-cart {
     margin: auto;
 }
+
+.disabled-custom {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+#cart {
+    background-color: white;
+    margin-top: 50px;
+}

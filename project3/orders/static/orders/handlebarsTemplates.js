@@ -1,5 +1,8 @@
 (function() {
   var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
+templates['cart'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div class=\"container border border-primary rounded fixed-top\" id='cart'>\n    <div class=\"row\">\n        <div class=\"col-4\">\n            <h5>Shopping Cart</h5>\n        </div>\n        <div class=\"offset-4 col-4\">\n            <div class=\"btn btn-primary\">\n                Back To Shopping\n            </div>\n        </div>\n    </div>\n    <div class=\"row\" id=\"pizza-row\">\n        <h5>Pizzas:</h5>\n    </div>\n    <div class=\"row\" id=\"pasta-row\">\n        <h5>Pastas:</h5>\n    </div>\n    <div class=\"row\" id=\"salads-row\">\n        <h5>Salads:</h5>\n    </div>\n    <div class=\"row\" id=\"subs-row\">\n        <h5>Subs:</h5>\n    </div>\n    <div class=\"row\" id=\"platters-row\">\n        <h5>Platters:</h5>\n    </div>\n    <div class=\"row\">\n        <div class=\"offset-8 col-4\" id=\"total\">\n            Total:\n        </div>\n    </div>\n</div>\n";
+},"useData":true});
 templates['checkBoxButton'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
