@@ -482,6 +482,32 @@ function addSaladCartButton(salads) {
     }
 }
 
+function addPastaCartButton(pastas) {
+    const addPastaButton = document.querySelector('#add-pasta-button');
+    addPastaButton.onclick = function() {
+        const pastaChoiceContainer = document.querySelector('#pastas-choice');
+        const pastaChoice = pastaChoiceContainer.querySelector('.active').firstElementChild.value;
+        const pasta = pastas.find(e => e.pk == pastaChoice);
+        const price = pasta.fields.price;
+        const priceContainer = document.querySelector('#pasta-price-container');
+        if (price) {
+            priceContainer.innerHTML = 'Price: ' + price + '$';
+        } else {
+            priceContainer.innerHTML = 'Unavailiable';
+        }
+        let newPastaOrder = {
+            pasta: pasta,
+            price: price
+        }
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.pastas.push(newPastaOrder);
+        cart.total += parseFloat(price);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log(localStorage.getItem('cart'));
+    }
+}
+}
+
 function main() {
     localStorageInit();
     displayPizzas();
