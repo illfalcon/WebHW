@@ -351,7 +351,8 @@ function calculateSubPrice(subPrices, extras) {
             extraSum += parseFloat(extras.find(e => e.pk == extraChoice.value).fields.price);
         }
     }
-    const price = parseFloat(subPrice) + parseFloat(extraSum);
+    let price = parseFloat(subPrice) + parseFloat(extraSum);
+    price = price.toFixed(2);
     const priceContainer = document.querySelector('#sub-price-container');
     if (subPriceFound) {
         priceContainer.innerHTML = 'Price: ' + price + '$';
@@ -436,7 +437,7 @@ function addPizzaCartButton(pizzaPrices, toppings, doughs, pizzaSizes) {
             let selectedIndex = topping.selectedIndex;
             let toppingChoice = topping.options[selectedIndex].value;
             let selection = toppings.find(e => e.pk == toppingChoice).fields.name;
-            toppingChoices.push(selection)
+            toppingChoices.push(selection);
         }
         let newPizzaOrder = {
             size: pizzaSize,
@@ -456,10 +457,11 @@ function addSaladCartButton(salads) {
     addSaladButton.onclick = function() {
         const saladChoiceContainer = document.querySelector('#salad-choice');
         const saladChoice = saladChoiceContainer.querySelector('.active').firstElementChild.value;
-        const salad = salads.find(e => e.pk == saladChoice).fields.name;
+        const salad = salads.find(e => e.pk == saladChoice);
+        const saladName = salad.fields.name;
         const price = salad.fields.price;
         let newSaladOrder = {
-            salad: salad,
+            salad: saladName,
             price: price
         }
         let cart = JSON.parse(localStorage.getItem('cart'));
@@ -474,10 +476,11 @@ function addPastaCartButton(pastas) {
     addPastaButton.onclick = function() {
         const pastaChoiceContainer = document.querySelector('#pastas-choice');
         const pastaChoice = pastaChoiceContainer.querySelector('.active').firstElementChild.value;
-        const pasta = pastas.find(e => e.pk == pastaChoice).fields.name;
+        const pasta = pastas.find(e => e.pk == pastaChoice);
+        const pastaName = pasta.fields.name;
         const price = pasta.fields.price;
         let newPastaOrder = {
-            pasta: pasta,
+            pasta: pastaName,
             price: price
         }
         let cart = JSON.parse(localStorage.getItem('cart'));
@@ -513,17 +516,11 @@ function addSubCartButton(sizes, subs, subPrices, extras) {
             }
         }
         const price = parseFloat(subPrice) + parseFloat(extraSum);
-        const priceContainer = document.querySelector('#sub-price-container');
-        if (subPriceFound) {
-            priceContainer.innerHTML = 'Price: ' + price + '$';
-        } else {
-            priceContainer.innerHTML = 'Unavailiable';
-        }
         let newSubOrder = {
             size: size,
             sub: sub,
             extras: extrasFound,
-            price: price
+            price: price.toFixed(2)
         };
         let cart = JSON.parse(localStorage.getItem('cart'));
         cart.subs.push(newSubOrder);
@@ -561,10 +558,10 @@ function displayCart() {
     cartButton.onclick = function() {
         const menu = document.querySelector('#menu-row');
         menu.classList.add('disabled-custom');
-
-        const pizzas = [];
-
-        const cartText = Handlebars.templates.cart(JSON.parse(localStorage.getItem('cart')));
+        console.log(JSON.parse(localStorage.getItem('cart')));
+        const cartObj = JSON.parse(localStorage.getItem('cart'));
+        cartObj.total = parseFloat(cartObj.total).toFixed(2);
+        const cartText = Handlebars.templates.cart(cartObj);
         const div = document.createElement('div');
         div.innerHTML = cartText;
         const cart = div.firstElementChild;
