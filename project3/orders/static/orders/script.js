@@ -322,6 +322,7 @@ function displaySubs() {
                 }
             }
         }
+        addSubCartButton(subPrices, extras)
         calculateSubPrice(subPrices, extras);
     }
     const form = new FormData();
@@ -392,6 +393,7 @@ function displayPlatters() {
         plattersContainer.firstElementChild.onchange = function() {
             calculatePlatterPrice(platters);
         }
+        addPlatterCartButton(platters);
         calculatePlatterPrice(platters);
     }
     const form = new FormData();
@@ -508,7 +510,7 @@ function addPastaCartButton(pastas) {
     }
 }
 
-function addSubCartButton(subs) {
+function addSubCartButton(subs, extras) {
     const addSubButton = document.querySelector('#add-sub-button');
     addSubButton.onclick = function() {
         const subsChoiceContainer = document.querySelector('#subs-choice');
@@ -546,6 +548,35 @@ function addSubCartButton(subs) {
         };
         let cart = JSON.parse(localStorage.getItem('cart'));
         cart.subs.push(newSubOrder);
+        cart.total += parseFloat(price);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log(localStorage.getItem('cart'));
+    }
+}
+
+function addPlatterCartButton(platters) {
+    const addPlatterButton = document.querySelector('#add-platter-button');
+    addPlatterButton.onclick = function () {
+        const platterChoiceContainer = document.querySelector('#platter-choice');
+        const selectedIndex = platterChoiceContainer.firstElementChild.selectedIndex;
+        const platterChoice = platterChoiceContainer.firstElementChild.options[selectedIndex].value;
+
+        const platterSizeChoiceContainer = document.querySelector('#platter-size-choice');
+        const platterSizeChoice = platterSizeChoiceContainer.querySelector('.active').firstElementChild.value;
+        const platter = platters.find(e => e.fields.name == platterChoice && e.fields.size == platterSizeChoice);
+        const price = platter.fields.price;
+        const priceContainer = document.querySelector('#platter-price-container');
+        if (price) {
+            priceContainer.innerHTML = 'Price: ' + price + '$';
+        } else {
+            priceContainer.innerHTML = 'Unavailiable';
+        }
+        let newPlatterOrder = {
+            platter: platter,
+            price: price
+        };
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.platters.push(newPlatterOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
         console.log(localStorage.getItem('cart'));
