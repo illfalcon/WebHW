@@ -10,123 +10,118 @@
         </div>
     </div>
     <div class="row" id="pizza-row">
-        <div class="container">
-            <div class="row">
-                <h5 class="col-4">Pizzas:</h5>
+        <h5 class="col-4">Pizzas:</h5>
+    </div>
+    <div class="row" id="pizza-container">
+        {{#each pizzas}}
+            <div class="col-4">
+                {{size}} {{dough}} Pizza
             </div>
-            <div class="row" id="pizza-container">
-                {{#each pizzas}}
-                    <div class="col-6">
-                        {{size}} {{dough}} Pizza
-                    </div>
-                    <div class="col-4">
-                        <h5>Toppings</h5>
-                        <ul>
-                            {{#each toppings}}
-                                <li>{{this}}</li>
-                            {{else}}
-                                No Toppings
-                            {{/each}}
-                        </ul>
-                    </div>
-                    <div class="col-2">
-                        Price: {{price}}$
-                    </div>
-                {{else}}
-                    <h6 class="col-6">No Pizzas</h6>
-                {{/each}}
+            <div class="col-4">
+                <h5>Toppings</h5>
+                <ul>
+                    {{#each toppings}}
+                        <li>{{this}}</li>
+                    {{else}}
+                        No Toppings
+                    {{/each}}
+                </ul>
             </div>
-        </div>
+            <div class="col-2 price">
+                Price: {{price}}$
+            </div>
+            <div class="col-2 btn btn-danger delete-button" id="{{id}}" data-price="{{price}}">
+                Remove
+            </div>
+        {{else}}
+            <h6 class="col-6">No Pizzas</h6>
+        {{/each}}
     </div>
     <div class="row" id="pasta-row">
-        <div class="container">
-            <div class="row">
-                <h5 class="col-4">Pastas:</h5>
+        <h5 class="col-4">Pastas:</h5>
+    </div>
+    <div class="row" id="pasta-container">
+        {{#each pastas}}
+            <div class="col-4">
+                {{pasta}}
             </div>
-            <div class="row" id="pasta-container">
-                {{#each pastas}}
-                    <div class="col-6">
-                        {{pasta}}
-                    </div>
-                    <div class="col-2 offset-4">
-                        Price: {{price}}$
-                    </div>
-                {{else}}
-                    <h6 class="col-6">No Pastas</h6>
-                {{/each}}
+            <div class="offset-4 col-2 price">
+                Price: {{price}}$
             </div>
-        </div>
+            <div class="col-2 btn btn-danger delete-button" id="{{id}}" data-price="{{price}}">
+                Remove
+            </div>
+        {{else}}
+            <h6 class="col-6">No Pastas</h6>
+        {{/each}}
     </div>
     <div class="row" id="salads-row">
-        <div class="container">
-            <div class="row">
-                <h5 class="col-4">Salads:</h5>
+        <h5 class="col-4">Salads:</h5>
+    </div>
+    <div class="row" id="salad-container">
+        {{#each salads}}
+            <div class="col-4">
+                {{salad}}
             </div>
-            <div class="row" id="salad-container">
-                {{#each salads}}
-                    <div class="col-6">
-                        {{salad}}
-                    </div>
-                    <div class="col-2 offset-4">
-                        Price: {{price}}$
-                    </div>
-                {{else}}
-                    <h6 class="col-6">No Salads</h6>
-                {{/each}}
+            <div class="col-2 offset-4">
+                Price: {{price}}$
             </div>
-        </div>
+            <div class="col-2 btn btn-danger delete-button" id="{{id}}" data-price="{{price}}">
+                Remove
+            </div>
+        {{else}}
+            <h6 class="col-6">No Salads</h6>
+        {{/each}}
     </div>
     <div class="row" id="subs-row">
-        <div class="container">
-            <div class="row">
-                <h5 class="col-4">Subs:</h5>
+        <h5 class="col-4">Subs:</h5>
+    </div>
+    <div class="row" id="sub-container">
+        {{#each subs}}
+            <div class="col-4">
+                {{size}} {{sub}} Sub
             </div>
-            <div class="row" id="sub-container">
-                {{#each subs}}
-                    <div class="col-6">
-                        {{size}} {{sub}} Sub
-                    </div>
-                    <div class="col-4">
-                        <h5>Extras</h5>
-                        {{#each extras}}
-                            <ul>
-                                <li>{{this}}</li>
-                            </ul>
-                        {{else}}
-                            No Extras
-                        {{/each}}
-                    </div>
-                    <div class="col-2">
-                        Price: {{price}}$
-                    </div>
+            <div class="col-4">
+                <h5>Extras</h5>
+                {{#each extras}}
+                    <ul>
+                        <li>{{this}}</li>
+                    </ul>
                 {{else}}
-                    <h6 class="col-6">No Subs</h6>
+                    No Extras
                 {{/each}}
             </div>
-        </div>
+            <div class="col-2">
+                Price: {{price}}$
+            </div>
+            <div class="col-2 btn btn-danger delete-button" id="{{id}}" data-price="{{price}}">
+                Remove
+            </div>
+        {{else}}
+            <h6 class="col-6">No Subs</h6>
+        {{/each}}
     </div>
     <div class="row" id="platters-row">
-        <div class="container">
-            <div class="row">
-                <h5 class="col-4">Platters:</h5>
+        <h5 class="col-4">Platters:</h5>
+    </div>
+    <div class="row" id="platter-container">
+        {{#each platters}}
+            <div class="col-4">
+                {{size}} {{platter}} Platter
             </div>
-            <div class="row" id="platter-container">
-                {{#each platters}}
-                    <div class="col-6">
-                        {{size}} {{platter}} Platter
-                    </div>
-                    <div class="offset-4 col-2">
-                        Price: {{price}}$
-                    </div>
-                {{else}}
-                    <h6 class="col-6">No Platters</h6>
-                {{/each}}
+            <div class="offset-4 col-2">
+                Price: {{price}}$
             </div>
-        </div>
+            <div class="col-2 btn btn-danger delete-button" id="{{id}}" data-price="{{price}}">
+                Remove
+            </div>
+        {{else}}
+            <h6 class="col-6">No Platters</h6>
+        {{/each}}
     </div>
     <div class="row">
-        <div class="offset-8 col-4" id="total">
-            <h6>Total: {{total}}$</h6>
+        <div class="offset-8 col-4">
+            <h6 id="total">Total: {{total}}$</h6>
             <div class="btn btn-primary">
                 Place an order
             </div>

@@ -1,6 +1,7 @@
 function localStorageInit() {
     if (!localStorage.getItem('cart')) {
         let cart = {
+            objId: 0,
             pizzas: [],
             pastas: [],
             salads: [],
@@ -439,13 +440,15 @@ function addPizzaCartButton(pizzaPrices, toppings, doughs, pizzaSizes) {
             let selection = toppings.find(e => e.pk == toppingChoice).fields.name;
             toppingChoices.push(selection);
         }
+        let cart = JSON.parse(localStorage.getItem('cart'));
         let newPizzaOrder = {
+            id: cart.objId,
             size: pizzaSize,
             dough: dough,
             toppings: toppingChoices,
             price: price
         }
-        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.objId += 1;
         cart.pizzas.push(newPizzaOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -460,11 +463,13 @@ function addSaladCartButton(salads) {
         const salad = salads.find(e => e.pk == saladChoice);
         const saladName = salad.fields.name;
         const price = salad.fields.price;
+        let cart = JSON.parse(localStorage.getItem('cart'));
         let newSaladOrder = {
+            id: cart.objId,
             salad: saladName,
             price: price
         }
-        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.objId += 1;
         cart.salads.push(newSaladOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -479,11 +484,13 @@ function addPastaCartButton(pastas) {
         const pasta = pastas.find(e => e.pk == pastaChoice);
         const pastaName = pasta.fields.name;
         const price = pasta.fields.price;
+        let cart = JSON.parse(localStorage.getItem('cart'));
         let newPastaOrder = {
+            id: cart.objId,
             pasta: pastaName,
             price: price
         }
-        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.objId += 1;
         cart.pastas.push(newPastaOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -516,13 +523,15 @@ function addSubCartButton(sizes, subs, subPrices, extras) {
             }
         }
         const price = parseFloat(subPrice) + parseFloat(extraSum);
+        let cart = JSON.parse(localStorage.getItem('cart'));
         let newSubOrder = {
+            id: cart.objId,
             size: size,
             sub: sub,
             extras: extrasFound,
             price: price.toFixed(2)
         };
-        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.objId += 1;
         cart.subs.push(newSubOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -541,12 +550,14 @@ function addPlatterCartButton(sizes, platterNames, platters) {
         const size = sizes.find(e => e.pk == platterSizeChoice).fields.name;
         const platter = platters.find(e => e.fields.name == platterChoice && e.fields.size == platterSizeChoice);
         const price = platter.fields.price;
+        let cart = JSON.parse(localStorage.getItem('cart'));
         let newPlatterOrder = {
+            id: cart.objId,
             size: size,
             platter: platterName,
             price: price
         };
-        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.objId += 1;
         cart.platters.push(newPlatterOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
@@ -569,6 +580,42 @@ function displayCart() {
         const cart = div.firstElementChild;
         const cartRow = document.querySelector('#cart-row');;
         cartRow.appendChild(cart);
+        const deleteButtons = cart.querySelectorAll('.delete-button');
+        for (let deleteButton of deleteButtons) {
+            deleteButton.onclick = function() {
+                const price = this.getAttribute('data-price');
+                cartObj.total -= parseFloat(price);
+                const id = this.id;
+                const category = this.parentNode.id;
+                switch (category) {
+                    case 'pizza-container':
+                        let i = cartObj.pizzas.findIndex(e => e.id == id);
+                        cartObj.pizzas.splice(i, 1);
+                        break;
+                    case 'pasta-container':
+                        let j = cartObj.pastas.findIndex(e => e.id == id);
+                        cartObj.pastas.splice(j, 1);
+                        break;
+                    case 'salad-container':
+                        let k = cartObj.salads.findIndex(e => e.id == id);
+                        cartObj.salads.splice(k, 1);
+                        break;
+                    case 'subs-container':
+                        let l = cartObj.subs.findIndex(e => e.id == id);
+                        cartObj.subs.splice(l, 1);
+                        break;
+                    case 'platter-container':
+                        let m = cartObj.platters.findIndex(e => e.id == id);
+                        cartObj.platters.splice(m, 1);
+                        break;
+                }
+
+                localStorage.setItem('cart', JSON.stringify(cartObj));
+                const total = document.querySelector('#total');
+                total.innerHTML = 'Total ' + cartObj.total.toFixed(2) + '$';
+                this.parentNode.remove();
+            }
+        }
         const backToShopping = cart.querySelector('#back-to-shopping');
         backToShopping.onclick = function() {
             menu.classList.remove('disabled-custom');
