@@ -558,6 +558,8 @@ function displayCart() {
     cartButton.onclick = function() {
         const menu = document.querySelector('#menu-row');
         menu.classList.add('disabled-custom');
+        const navbar = document.querySelector('#navbar');
+        navbar.classList.add('disabled-custom');
         console.log(JSON.parse(localStorage.getItem('cart')));
         const cartObj = JSON.parse(localStorage.getItem('cart'));
         cartObj.total = parseFloat(cartObj.total).toFixed(2);
@@ -567,6 +569,12 @@ function displayCart() {
         const cart = div.firstElementChild;
         const cartRow = document.querySelector('#cart-row');;
         cartRow.appendChild(cart);
+        const backToShopping = cart.querySelector('#back-to-shopping');
+        backToShopping.onclick = function() {
+            menu.classList.remove('disabled-custom');
+            navbar.classList.remove('disabled-custom');
+            document.querySelector('#cart').remove();
+        }
     }
 }
 
