@@ -254,6 +254,7 @@ function displayPastas() {
                 calculatePastaPrice(pastas);
             }
         }
+        addPastaCartButton(pastas);
         calculatePastaPrice(pastas);
     }
     const form = new FormData();
@@ -506,6 +507,49 @@ function addPastaCartButton(pastas) {
         console.log(localStorage.getItem('cart'));
     }
 }
+
+function addSubCartButton(subs) {
+    const addSubButton = document.querySelector('#add-sub-button');
+    addSubButton.onclick = function() {
+        const subsChoiceContainer = document.querySelector('#subs-choice');
+        const selectedIndex = subsChoiceContainer.firstElementChild.selectedIndex;
+        const subChoice = subsChoiceContainer.firstElementChild.options[selectedIndex].value;
+
+        const subSizeChoiceContainer = document.querySelector('#sub-size-choice');
+        const subSizeChoice = subSizeChoiceContainer.querySelector('.active').firstElementChild.value;
+        const subPriceFound = subPrices.find(e => e.fields.filling == subChoice && e.fields.size == subSizeChoice);
+        let subPrice = 0;
+        if (subPriceFound) {
+            subPrice = subPriceFound.fields.base_price;
+        }
+        const extraChoiceContainer = document.querySelector('#extras-choice');
+        const extraChoices = extraChoiceContainer.querySelectorAll('.active');
+        let extraSum = 0;
+        const extrasFound = [];
+        if (extraChoices) {
+            for (let extraChoice of extraChoices) {
+                extraSum += parseFloat(extras.find(e => e.pk == extraChoice.value).fields.price);
+                extrasFound.push(extras.find(e => e.pk == extraChoice.value));
+            }
+        }
+        const price = parseFloat(subPrice) + parseFloat(extraSum);
+        const priceContainer = document.querySelector('#sub-price-container');
+        if (subPriceFound) {
+            priceContainer.innerHTML = 'Price: ' + price + '$';
+        } else {
+            priceContainer.innerHTML = 'Unavailiable';
+        }
+        let newSubOrder = {
+            sub: subPriceFound,
+            extras: extrasFound,
+            price: price
+        };
+        let cart = JSON.parse(localStorage.getItem('cart'));
+        cart.subs.push(newSubOrder);
+        cart.total += parseFloat(price);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        console.log(localStorage.getItem('cart'));
+    }
 }
 
 function main() {
