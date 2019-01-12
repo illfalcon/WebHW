@@ -8,8 +8,6 @@ function localStorageInit() {
             platters: [],
             total: 0
         }
-        console.log(cart);
-        console.log(JSON.stringify(cart));
         localStorage.setItem('cart', JSON.stringify(cart));
     }
 }
@@ -110,7 +108,6 @@ function displayPizzas() {
         const data = JSON.parse(request.responseText);
         const pizzaPrices = JSON.parse(data.pizzaPrices);
         const doughs = JSON.parse(data.doughs);
-        console.log(data);
         const doughChoice = document.querySelector('#pizza-dough-choice');
         addButtons(doughChoice, doughs, true);
 
@@ -322,7 +319,7 @@ function displaySubs() {
                 }
             }
         }
-        addSubCartButton(subPrices, extras)
+        addSubCartButton(sizes, subs, subPrices, extras)
         calculateSubPrice(subPrices, extras);
     }
     const form = new FormData();
@@ -393,7 +390,7 @@ function displayPlatters() {
         plattersContainer.firstElementChild.onchange = function() {
             calculatePlatterPrice(platters);
         }
-        addPlatterCartButton(platters);
+        addPlatterCartButton(sizes, platterNames, platters);
         calculatePlatterPrice(platters);
     }
     const form = new FormData();
@@ -434,7 +431,6 @@ function addPizzaCartButton(pizzaPrices, toppings, doughs, pizzaSizes) {
         const price = pizza.fields.price;
         const toppingContainer = document.querySelector('#topping-container');
         const toppingSelections = toppingContainer.children;
-        console.log(toppingSelections);
         const toppingChoices = [];
         for (let topping of toppingSelections) {
             let selectedIndex = topping.selectedIndex;
@@ -448,12 +444,10 @@ function addPizzaCartButton(pizzaPrices, toppings, doughs, pizzaSizes) {
             toppings: toppingChoices,
             price: price
         }
-        console.log(JSON.parse(localStorage.getItem('cart')));
         let cart = JSON.parse(localStorage.getItem('cart'));
         cart.pizzas.push(newPizzaOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
-        console.log(localStorage.getItem('cart'));
     }
 }
 
@@ -462,14 +456,8 @@ function addSaladCartButton(salads) {
     addSaladButton.onclick = function() {
         const saladChoiceContainer = document.querySelector('#salad-choice');
         const saladChoice = saladChoiceContainer.querySelector('.active').firstElementChild.value;
-        const salad = salads.find(e => e.pk == saladChoice);
+        const salad = salads.find(e => e.pk == saladChoice).fields.name;
         const price = salad.fields.price;
-        const priceContainer = document.querySelector('#salad-price-container');
-        if (price) {
-            priceContainer.innerHTML = 'Price: ' + price + '$';
-        } else {
-            priceContainer.innerHTML = 'Unavailiable';
-        }
         let newSaladOrder = {
             salad: salad,
             price: price
@@ -478,7 +466,6 @@ function addSaladCartButton(salads) {
         cart.salads.push(newSaladOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
-        console.log(localStorage.getItem('cart'));
     }
 }
 
@@ -487,14 +474,8 @@ function addPastaCartButton(pastas) {
     addPastaButton.onclick = function() {
         const pastaChoiceContainer = document.querySelector('#pastas-choice');
         const pastaChoice = pastaChoiceContainer.querySelector('.active').firstElementChild.value;
-        const pasta = pastas.find(e => e.pk == pastaChoice);
+        const pasta = pastas.find(e => e.pk == pastaChoice).fields.name;
         const price = pasta.fields.price;
-        const priceContainer = document.querySelector('#pasta-price-container');
-        if (price) {
-            priceContainer.innerHTML = 'Price: ' + price + '$';
-        } else {
-            priceContainer.innerHTML = 'Unavailiable';
-        }
         let newPastaOrder = {
             pasta: pasta,
             price: price
@@ -503,19 +484,19 @@ function addPastaCartButton(pastas) {
         cart.pastas.push(newPastaOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
-        console.log(localStorage.getItem('cart'));
     }
 }
 
-function addSubCartButton(subPrices, extras) {
+function addSubCartButton(sizes, subs, subPrices, extras) {
     const addSubButton = document.querySelector('#add-sub-button');
     addSubButton.onclick = function() {
         const subsChoiceContainer = document.querySelector('#subs-choice');
         const selectedIndex = subsChoiceContainer.firstElementChild.selectedIndex;
         const subChoice = subsChoiceContainer.firstElementChild.options[selectedIndex].value;
-
+        const sub = subs.find(e => e.pk == subChoice).fields.name;
         const subSizeChoiceContainer = document.querySelector('#sub-size-choice');
         const subSizeChoice = subSizeChoiceContainer.querySelector('.active').firstElementChild.value;
+        const size = sizes.find(e => e.pk == subSizeChoice).fields.name;
         const subPriceFound = subPrices.find(e => e.fields.filling == subChoice && e.fields.size == subSizeChoice);
         let subPrice = 0;
         if (subPriceFound) {
@@ -528,7 +509,7 @@ function addSubCartButton(subPrices, extras) {
         if (extraChoices) {
             for (let extraChoice of extraChoices) {
                 extraSum += parseFloat(extras.find(e => e.pk == extraChoice.value).fields.price);
-                extrasFound.push(extras.find(e => e.pk == extraChoice.value));
+                extrasFound.push(extras.find(e => e.pk == extraChoice.value).fields.name);
             }
         }
         const price = parseFloat(subPrice) + parseFloat(extraSum);
@@ -539,7 +520,8 @@ function addSubCartButton(subPrices, extras) {
             priceContainer.innerHTML = 'Unavailiable';
         }
         let newSubOrder = {
-            sub: subPriceFound,
+            size: size,
+            sub: sub,
             extras: extrasFound,
             price: price
         };
@@ -547,36 +529,30 @@ function addSubCartButton(subPrices, extras) {
         cart.subs.push(newSubOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
-        console.log(localStorage.getItem('cart'));
     }
 }
 
-function addPlatterCartButton(platters) {
+function addPlatterCartButton(sizes, platterNames, platters) {
     const addPlatterButton = document.querySelector('#add-platter-button');
     addPlatterButton.onclick = function () {
         const platterChoiceContainer = document.querySelector('#platter-choice');
         const selectedIndex = platterChoiceContainer.firstElementChild.selectedIndex;
         const platterChoice = platterChoiceContainer.firstElementChild.options[selectedIndex].value;
-
+        const platterName = platterNames.find(e => e.pk == platterChoice).fields.name;
         const platterSizeChoiceContainer = document.querySelector('#platter-size-choice');
         const platterSizeChoice = platterSizeChoiceContainer.querySelector('.active').firstElementChild.value;
+        const size = sizes.find(e => e.pk == platterSizeChoice).fields.name;
         const platter = platters.find(e => e.fields.name == platterChoice && e.fields.size == platterSizeChoice);
         const price = platter.fields.price;
-        const priceContainer = document.querySelector('#platter-price-container');
-        if (price) {
-            priceContainer.innerHTML = 'Price: ' + price + '$';
-        } else {
-            priceContainer.innerHTML = 'Unavailiable';
-        }
         let newPlatterOrder = {
-            platter: platter,
+            size: size,
+            platter: platterName,
             price: price
         };
         let cart = JSON.parse(localStorage.getItem('cart'));
         cart.platters.push(newPlatterOrder);
         cart.total += parseFloat(price);
         localStorage.setItem('cart', JSON.stringify(cart));
-        console.log(localStorage.getItem('cart'));
     }
 }
 
