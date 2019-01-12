@@ -170,7 +170,7 @@ function displayPizzas() {
                 }
             }
         }
-        addPizzaCartButton(pizzaPrices, toppingList);
+        addPizzaCartButton(pizzaPrices, toppingList, doughs, pizzaSizes);
         calculatePizzaPrice(pizzaPrices);
     }
     const form = new FormData();
@@ -419,15 +419,17 @@ function calculatePlatterPrice(platters) {
     }
 }
 
-function addPizzaCartButton(pizzaPrices, toppings) {
+function addPizzaCartButton(pizzaPrices, toppings, doughs, pizzaSizes) {
     const addPizzaButton = document.querySelector('#add-pizza-button');
     addPizzaButton.onclick = function() {
         const doughChoiceContainer = document.querySelector('#pizza-dough-choice');
         const doughChoiceValue = doughChoiceContainer.querySelector('.active').firstElementChild.value;
+        const dough = doughs.find(e => e.pk == doughChoiceValue).fields.name;
         const toppingChoiceContainer = document.querySelector('#pizza-topping-choice');
         const toppingChoiceValue = toppingChoiceContainer.querySelector('.active').firstElementChild.value;
         const sizeChoiceContainer = document.querySelector('#pizza-size-choice');
         const sizeChoiceValue = sizeChoiceContainer.querySelector('.active').firstElementChild.value;
+        const pizzaSize = pizzaSizes.find(e => e.pk == sizeChoiceValue).fields.name;
         const pizza = pizzaPrices.find(e => e.fields.dough == doughChoiceValue && e.fields.numOfToppings == toppingChoiceValue && e.fields.size == sizeChoiceValue);
         const price = pizza.fields.price;
         const toppingContainer = document.querySelector('#topping-container');
@@ -437,17 +439,12 @@ function addPizzaCartButton(pizzaPrices, toppings) {
         for (let topping of toppingSelections) {
             let selectedIndex = topping.selectedIndex;
             let toppingChoice = topping.options[selectedIndex].value;
-            let selection = toppings.find(e => e.pk == toppingChoice);
+            let selection = toppings.find(e => e.pk == toppingChoice).fields.name;
             toppingChoices.push(selection)
         }
-        const priceContainer = document.querySelector('#pizza-price');
-        if (price) {
-            priceContainer.innerHTML = 'Price: ' + price + '$';
-        } else {
-            priceContainer.innerHTML = 'Unavailiable';
-        }
         let newPizzaOrder = {
-            pizza: pizza,
+            size: pizzaSize,
+            dough: dough,
             toppings: toppingChoices,
             price: price
         }
@@ -588,7 +585,10 @@ function displayCart() {
     cartButton.onclick = function() {
         const menu = document.querySelector('#menu-row');
         menu.classList.add('disabled-custom');
-        const cartText = Handlebars.templates.cart();
+
+        const pizzas = [];
+
+        const cartText = Handlebars.templates.cart(JSON.parse(localStorage.getItem('cart')));
         const div = document.createElement('div');
         div.innerHTML = cartText;
         const cart = div.firstElementChild;
