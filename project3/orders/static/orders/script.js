@@ -600,7 +600,7 @@ function displayCart() {
                         let k = cartObj.salads.findIndex(e => e.id == id);
                         cartObj.salads.splice(k, 1);
                         break;
-                    case 'subs-container':
+                    case 'sub-container':
                         let l = cartObj.subs.findIndex(e => e.id == id);
                         cartObj.subs.splice(l, 1);
                         break;
@@ -621,6 +621,32 @@ function displayCart() {
             menu.classList.remove('disabled-custom');
             navbar.classList.remove('disabled-custom');
             document.querySelector('#cart').remove();
+        }
+        const placeOrder = cart.querySelector('#place-an-order');
+        placeOrder.onclick = function () {
+            const request = new XMLHttpRequest();
+            request.open('POST', '/order');
+            request.onload = function() {
+                let newCart = {
+                    objId: 0,
+                    pizzas: [],
+                    pastas: [],
+                    salads: [],
+                    subs: [],
+                    platters: [],
+                    total: 0
+                }
+                localStorage.setItem('cart', JSON.stringify(newCart));
+                menu.classList.remove('disabled-custom');
+                navbar.classList.remove('disabled-custom');
+                document.querySelector('#cart').remove();
+            }
+            const form = new FormData();
+            const csrftoken = getCookie('csrftoken');
+            form.append('csrfmiddlewaretoken', csrftoken);
+            form.append('cart', localStorage.getItem('cart'));
+            request.send(form);
+            return false;
         }
     }
 }

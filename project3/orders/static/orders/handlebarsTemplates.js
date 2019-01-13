@@ -107,7 +107,7 @@ templates['cart'] = template({"1":function(container,depth0,helpers,partials,dat
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.platters : depth0),{"name":"each","hash":{},"fn":container.program(23, data, 0),"inverse":container.program(25, data, 0),"data":data})) != null ? stack1 : "")
     + "    </div>\n    <div class=\"row\">\n        <div class=\"offset-8 col-4\">\n            <h6 id=\"total\">Total: "
     + container.escapeExpression(((helper = (helper = helpers.total || (depth0 != null ? depth0.total : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"total","hash":{},"data":data}) : helper)))
-    + "$</h6>\n            <div class=\"btn btn-primary\">\n                Place an order\n            </div>\n        </div>\n    </div>\n</div>\n";
+    + "$</h6>\n            <div class=\"btn btn-primary\" id=\"place-an-order\">\n                Place an order\n            </div>\n        </div>\n    </div>\n</div>\n";
 },"useData":true});
 templates['checkBoxButton'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;

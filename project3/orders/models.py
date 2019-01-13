@@ -106,3 +106,12 @@ class DinnerPlatter(models.Model):
 
     def __str__(self):
         return f'{self.name}, {self.size} - {self.price}'
+
+#order models
+class Order(models.Model):
+    text = models.TextField()
+    total = models.DecimalField(max_digits=5, decimal_places=2)
+    completed = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.text} - completed: {self.completed}'

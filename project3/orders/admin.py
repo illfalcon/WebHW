@@ -15,6 +15,7 @@ admin.site.register(Salad)
 admin.site.register(SubSize)
 admin.site.register(SubFilling)
 admin.site.register(PlatterName)
+admin.site.register(Order)
 
 
 # Register your models here.
