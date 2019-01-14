@@ -84,3 +84,4 @@ def order(request):
     orderModel = Order(text=textOrder, total=orderObj['total'])
     orderModel.save()
     return JsonResponse({'success': True})
+

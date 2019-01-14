@@ -16,7 +16,7 @@ function localStorageInit() {
 function getCookie(cname) {
   const name = cname + "=";
   const ca = document.cookie.split(';');
-  for(const i = 0; i < ca.length; i++) {
+  for(let i = 0; i < ca.length; i++) {
     const c = ca[i];
     while (c.charAt(0) == ' ') {
       c = c.substring(1);
@@ -622,24 +622,39 @@ function displayCart() {
             navbar.classList.remove('disabled-custom');
             document.querySelector('#cart').remove();
         }
+        const loginButton = cart.querySelector('#login-button');
+        loginButton.onclick = function () {
+            const loginWindowText = Handlebars.templates.loginForm();
+            const div = document.createElement('div');
+            div.innerHTML = loginWindowText;
+            const loginWindow = div.firstElementChild;
+            setUpLoginWindow();
+            document.querySelector('#login-row').appendChild(loginWindow);
+            document.querySelector('#cart').remove();
+        }
         const placeOrder = cart.querySelector('#place-an-order');
         placeOrder.onclick = function () {
             const request = new XMLHttpRequest();
             request.open('POST', '/order');
             request.onload = function() {
-                let newCart = {
-                    objId: 0,
-                    pizzas: [],
-                    pastas: [],
-                    salads: [],
-                    subs: [],
-                    platters: [],
-                    total: 0
+                const data = JSON.parse(request.responseText);
+                if (data.success == 'True') {
+                    let newCart = {
+                        objId: 0,
+                        pizzas: [],
+                        pastas: [],
+                        salads: [],
+                        subs: [],
+                        platters: [],
+                        total: 0
+                    }
+                    localStorage.setItem('cart', JSON.stringify(newCart));
+                    menu.classList.remove('disabled-custom');
+                    navbar.classList.remove('disabled-custom');
+                    document.querySelector('#cart').remove();
+                } else {
+                    alert('Error');
                 }
-                localStorage.setItem('cart', JSON.stringify(newCart));
-                menu.classList.remove('disabled-custom');
-                navbar.classList.remove('disabled-custom');
-                document.querySelector('#cart').remove();
             }
             const form = new FormData();
             const csrftoken = getCookie('csrftoken');
@@ -648,6 +663,38 @@ function displayCart() {
             request.send(form);
             return false;
         }
+    }
+}
+
+function setUpLoginWindow() {
+    const backToShoppingFromLoginButton = loginWindow.querySelector('#back-to-shopping-from-login');
+    backToShoppingFromLoginButton.onclick = function () {
+        document.querySelector('#menu-row').classList.remove('disabled-custom');
+        document.querySelector('#navbar').classList.remove('disabled-custom');
+        navbar.classList.remove('disabled-custom');
+        document.querySelector('#login-form').remove();
+    }
+    const loginButton = document.querySelector('#send-login-button');
+    loginButton.onclick = function () {
+        const request = new XMLHttpRequest();
+        request.open('POST', '/login');
+        request.onload = function () {
+            const data = JSON.parse(request.responseText);
+            if (data.success == 'True') {
+                alert('Logged In Successfully');
+                document.querySelector('#menu-row').classList.remove('disabled-custom');
+                document.querySelector('#navbar').classList.remove('disabled-custom');
+                document.querySelector('#login-form').remove();
+            } else {
+                alert('Error');
+            }
+        }
+        const form = new FormData();
+        const csrftoken = getCookie('csrftoken');
+        form.append('login', login);
+        form.append('password', password);
+        request.send(form);
+        return false;
     }
 }
 

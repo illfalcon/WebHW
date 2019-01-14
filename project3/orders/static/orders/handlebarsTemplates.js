@@ -105,7 +105,7 @@ templates['cart'] = template({"1":function(container,depth0,helpers,partials,dat
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.subs : depth0),{"name":"each","hash":{},"fn":container.program(16, data, 0),"inverse":container.program(21, data, 0),"data":data})) != null ? stack1 : "")
     + "    </div>\n    <div class=\"row\" id=\"platters-row\">\n        <h5 class=\"col-4\">Platters:</h5>\n    </div>\n    <div class=\"row\" id=\"platter-container\">\n"
     + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.platters : depth0),{"name":"each","hash":{},"fn":container.program(23, data, 0),"inverse":container.program(25, data, 0),"data":data})) != null ? stack1 : "")
-    + "    </div>\n    <div class=\"row\">\n        <div class=\"offset-8 col-4\">\n            <h6 id=\"total\">Total: "
+    + "    </div>\n    <div class=\"row\">\n        <div class=\"offset-8 col-4\">\n            <div class=\"cashback\">\n                0.00$\n            </div>\n            <div id=\"cashback-checkbox\" class=\"checkbox disabled-custom\">\n                <label><input type=\"checkbox\" value=\"\">Use Cashback</label>\n            </div>\n            <div id=\"login-button\" class=\"btn btn-primary\">\n                Log In\n            </div>\n            <div id=\"register-button\" class=\"btn btn-danger\">\n                Register\n            </div>\n            <h6 id=\"total\">Total: "
     + container.escapeExpression(((helper = (helper = helpers.total || (depth0 != null ? depth0.total : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"total","hash":{},"data":data}) : helper)))
     + "$</h6>\n            <div class=\"btn btn-primary\" id=\"place-an-order\">\n                Place an order\n            </div>\n        </div>\n    </div>\n</div>\n";
 },"useData":true});
@@ -121,6 +121,9 @@ templates['checkBoxButton'] = template({"compiler":[7,">= 4.0.0"],"main":functio
     + "\">"
     + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
     + "</button>\n";
+},"useData":true});
+templates['loginForm'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "<div class=\"container border border-primary rounded fixed-top\" id=\"login-form\">\n    <div class=\"row\">\n        <div class=\"offset-8 col-4\">\n            <div class=\"btn btn-outline-primary\" id=\"back-to-shopping-from-login\">\n                Back To Shopping\n            </div>\n        </div>\n    </div>\n    <div class=\"row\">\n        <div class=\"col-6 offset-3\">\n            <h3>Login Form</h3>\n            <form>\n                <div class=\"form-group\">\n                    <input type=\"text\" class=\"form-control\" placeholder=\"Your Email\" value=\"\" />\n                </div>\n                <div class=\"form-group\">\n                    <input type=\"password\" class=\"form-control\" placeholder=\"Your Password\" value=\"\" />\n                </div>\n                <div class=\"btn btn-primary\">\n                    Log In\n                </div>\n            </form>\n        </div>\n    </div>\n</div>\n";
 },"useData":true});
 templates['pizzaButton'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
