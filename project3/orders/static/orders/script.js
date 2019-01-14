@@ -628,8 +628,18 @@ function displayCart() {
             const div = document.createElement('div');
             div.innerHTML = loginWindowText;
             const loginWindow = div.firstElementChild;
-            setUpLoginWindow();
+            setUpLoginWindow(loginWindow);
             document.querySelector('#login-row').appendChild(loginWindow);
+            document.querySelector('#cart').remove();
+        }
+        const registerButton = cart.querySelector('#register-button');
+        registerButton.onclick = function () {
+            const registrationWindowText = Handlebars.templates.registrationForm();
+            const div = document.createElement('div');
+            div.innerHTML = registrationWindowText;
+            const registrationWindow = div.firstElementChild;
+            setUpRegisterWindow(registrationWindow);
+            document.querySelector('#register-row').appendChild(registrationWindow);
             document.querySelector('#cart').remove();
         }
         const placeOrder = cart.querySelector('#place-an-order');
@@ -666,15 +676,14 @@ function displayCart() {
     }
 }
 
-function setUpLoginWindow() {
+function setUpLoginWindow(loginWindow) {
     const backToShoppingFromLoginButton = loginWindow.querySelector('#back-to-shopping-from-login');
     backToShoppingFromLoginButton.onclick = function () {
         document.querySelector('#menu-row').classList.remove('disabled-custom');
         document.querySelector('#navbar').classList.remove('disabled-custom');
-        navbar.classList.remove('disabled-custom');
         document.querySelector('#login-form').remove();
     }
-    const loginButton = document.querySelector('#send-login-button');
+    const loginButton = loginWindow.querySelector('#send-login-button');
     loginButton.onclick = function () {
         const request = new XMLHttpRequest();
         request.open('POST', '/login');
@@ -682,16 +691,57 @@ function setUpLoginWindow() {
             const data = JSON.parse(request.responseText);
             if (data.success == 'True') {
                 alert('Logged In Successfully');
-                document.querySelector('#menu-row').classList.remove('disabled-custom');
-                document.querySelector('#navbar').classList.remove('disabled-custom');
-                document.querySelector('#login-form').remove();
+                loginWindow.querySelector('#menu-row').classList.remove('disabled-custom');
+                loginWindow.querySelector('#navbar').classList.remove('disabled-custom');
+                loginWindow.querySelector('#login-form').remove();
             } else {
                 alert('Error');
             }
         }
+        const login = loginWindow.querySelector('#login-username').value;
+        const password = loginWindow.querySelector('#login-password').value;
         const form = new FormData();
         const csrftoken = getCookie('csrftoken');
         form.append('login', login);
+        form.append('password', password);
+        request.send(form);
+        return false;
+    }
+}
+
+function setUpRegisterWindow(registrationWindow) {
+    const backToShoppingFromRegistrationButton = registrationWindow.querySelector('#back-to-shopping-from-registration');
+    backToShoppingFromRegistrationButton.onclick = function () {
+        document.querySelector('#menu-row').classList.remove('disabled-custom');
+        document.querySelector('#navbar').classList.remove('disabled-custom');
+        document.querySelector('#registration-form').remove();
+    }
+    const regButton = registrationWindow.querySelector('#send-registration-button');
+    regButton.onclick = function () {
+        const request = new XMLHttpRequest();
+        request.open('POST', '/register');
+        request.onload = function () {
+            const data = JSON.parse(request.responseText);
+            if (data.success == 'True') {
+                alert('Registered Successfully');
+                registrationWindow.querySelector('#menu-row').classList.remove('disabled-custom');
+                registrationWindow.querySelector('#navbar').classList.remove('disabled-custom');
+                registrationWindow.querySelector('#registration-form').remove();
+            } else {
+                alert(data.errMsg);
+            }
+        }
+        const username = registrationWindow.querySelector('#registration-username').value;
+        const name = registrationWindow.querySelector('#registration-name').value;
+        const surname = registrationWindow.querySelector('#registration-surname').value;
+        const email = registrationWindow.querySelector('#registration-email').value;
+        const password = registrationWindow.querySelector('#registration-password').value;
+        const form = new FormData();
+        const csrftoken = getCookie('csrftoken');
+        form.append('username', username);
+        form.append('name', name);
+        form.append('surname', surname);
+        form.append('email', email);
         form.append('password', password);
         request.send(form);
         return false;
