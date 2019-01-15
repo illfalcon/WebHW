@@ -792,6 +792,11 @@ function setUpRegisterWindow(registrationWindow) {
 }
 
 function authenticate() {
+    const navbar = document.querySelector('#navbar');
+    const cartBut = document.querySelector('#cart-button')
+    while (navbar.lastChild != cartBut) {
+        navbar.removeChild(navbar.lastChild);
+    }
     const request = new XMLHttpRequest();
     request.open('POST', '/auth');
     request.onload = function() {
