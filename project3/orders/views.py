@@ -4,6 +4,8 @@ from django.shortcuts import render
 from .models import *
 from django.core import serializers
 import json
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
 def index(request):
@@ -85,3 +87,46 @@ def order(request):
     orderModel.save()
     return JsonResponse({'success': True})
 
+def register(request):
+    username = request.POST['username']
+    name = request.POST['name']
+    surname = request.POST['surname']
+    email = request.POST['email']
+    password = request.POST['password']
+    try:
+        User.objects.create_user(username=username, first_name=name, last_name=surname, email=email, password=password)
+        return JsonResponse({'success': True})
+    except (Exception, ArithmeticError) as e:
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(e).__name__, e.args)
+        return JsonResponse({'success': False, 'errMsg': message})
+
+def userLogin(request):
+    username = request.POST['login']
+    password = request.POST['password']
+    try:
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return JsonResponse({'success': True})
+        else:
+            return JsonResponse({'success': False, 'errMsg': 'User not found'})
+    except (Exception, ArithmeticError) as e:
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(e).__name__, e.args)
+        return JsonResponse({'success': False, 'errMsg': message})
+
+def auth(request):
+    if request.user.is_authenticated:
+        return JsonResponse({'isLoggedIn': True})
+    else:
+        return JsonResponse({'isLoggedIn': False})
+
+def userLogout(request):
+    try:
+        logout(request)
+        return JsonResponse({'success': True})
+    except (Exception, ArithmeticError) as e:
+        template = "An exception of type {0} occurred. Arguments:\n{1!r}"
+        message = template.format(type(e).__name__, e.args)
+        return JsonResponse({'success': False, 'errMsg': message})

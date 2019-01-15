@@ -11,6 +11,9 @@ function localStorageInit() {
         }
         localStorage.setItem('cart', JSON.stringify(cart));
     }
+    if (!localStorage.getItem('needToPay')) {
+        localStorage.setItem('needToPay', 0);
+    }
 }
 
 function getCookie(cname) {
@@ -564,6 +567,37 @@ function addPlatterCartButton(sizes, platterNames, platters) {
     }
 }
 
+function checkBox() {
+    const authRequest = new XMLHttpRequest();
+    authRequest.open('POST', '/auth');
+    authRequest.onload = function () {
+        const data = JSON.parse(authRequest.responseText);
+        if (data.isLoggedIn) {
+            document.querySelector('#login-button').remove();
+            document.querySelector('#register-button').remove();
+            const checkBox = document.querySelector('#discount-checkbox');
+            checkBox.classList.remove('disabled-custom');
+            checkBox.onclick = function () {
+                const total = document.querySelector('#total');
+                const withOut = JSON.parse(localStorage.getItem('cart')).total;
+                const cb = document.querySelector('#cb');
+                if (cb.checked) {
+                    total.innerHTML = 'Total: ' + (parseFloat(withOut) - parseFloat(withOut) * 0.05).toFixed(2) + '$';
+                    localStorage.getItem('needToPay', parseFloat(withOut) - parseFloat(withOut) * 0.05);
+                } else {
+                    total.innerHTML ='Total: ' +  withOut.toFixed(2) + '$';
+                    localStorage.setItem('needToPay', withOut);
+                }
+            }
+        }
+    }
+    const authForm = new FormData();
+    const csrftoken = getCookie('csrftoken');
+    authForm.append('csrfmiddlewaretoken', csrftoken);
+    authRequest.send(authForm);
+    return false;
+}
+
 function displayCart() {
     const cartButton = document.querySelector('#cart-button');
     cartButton.onclick = function() {
@@ -580,6 +614,9 @@ function displayCart() {
         const cart = div.firstElementChild;
         const cartRow = document.querySelector('#cart-row');;
         cartRow.appendChild(cart);
+
+        checkBox();
+
         const deleteButtons = cart.querySelectorAll('.delete-button');
         for (let deleteButton of deleteButtons) {
             deleteButton.onclick = function() {
@@ -662,6 +699,7 @@ function displayCart() {
                     menu.classList.remove('disabled-custom');
                     navbar.classList.remove('disabled-custom');
                     document.querySelector('#cart').remove();
+                    alert('Order made!')
                 } else {
                     alert('Error');
                 }
@@ -689,11 +727,12 @@ function setUpLoginWindow(loginWindow) {
         request.open('POST', '/login');
         request.onload = function () {
             const data = JSON.parse(request.responseText);
-            if (data.success == 'True') {
+            if (data.success) {
                 alert('Logged In Successfully');
-                loginWindow.querySelector('#menu-row').classList.remove('disabled-custom');
-                loginWindow.querySelector('#navbar').classList.remove('disabled-custom');
-                loginWindow.querySelector('#login-form').remove();
+                document.querySelector('#menu-row').classList.remove('disabled-custom');
+                document.querySelector('#navbar').classList.remove('disabled-custom');
+                document.querySelector('#login-form').remove();
+                authenticate();
             } else {
                 alert('Error');
             }
@@ -702,6 +741,7 @@ function setUpLoginWindow(loginWindow) {
         const password = loginWindow.querySelector('#login-password').value;
         const form = new FormData();
         const csrftoken = getCookie('csrftoken');
+        form.append('csrfmiddlewaretoken', csrftoken);
         form.append('login', login);
         form.append('password', password);
         request.send(form);
@@ -722,11 +762,13 @@ function setUpRegisterWindow(registrationWindow) {
         request.open('POST', '/register');
         request.onload = function () {
             const data = JSON.parse(request.responseText);
-            if (data.success == 'True') {
+            console.log(data);
+            if (data.success) {
                 alert('Registered Successfully');
-                registrationWindow.querySelector('#menu-row').classList.remove('disabled-custom');
-                registrationWindow.querySelector('#navbar').classList.remove('disabled-custom');
-                registrationWindow.querySelector('#registration-form').remove();
+                document.querySelector('#menu-row').classList.remove('disabled-custom');
+                document.querySelector('#navbar').classList.remove('disabled-custom');
+                document.querySelector('#registration-form').remove();
+                authenticate();
             } else {
                 alert(data.errMsg);
             }
@@ -738,6 +780,7 @@ function setUpRegisterWindow(registrationWindow) {
         const password = registrationWindow.querySelector('#registration-password').value;
         const form = new FormData();
         const csrftoken = getCookie('csrftoken');
+        form.append('csrfmiddlewaretoken', csrftoken);
         form.append('username', username);
         form.append('name', name);
         form.append('surname', surname);
@@ -748,8 +791,87 @@ function setUpRegisterWindow(registrationWindow) {
     }
 }
 
+function authenticate() {
+    const request = new XMLHttpRequest();
+    request.open('POST', '/auth');
+    request.onload = function() {
+        const data = JSON.parse(request.responseText);
+        if (data.isLoggedIn) {
+            const logOutDiv = document.createElement('div');
+            logOutDiv.innerHTML = 'Log Out'
+            logOutDiv.classList.add('col-2');
+            logOutDiv.classList.add('btn');
+            logOutDiv.classList.add('btn-secondary');
+            logOutDiv.id = 'logout-button';
+            logOutDiv.onclick = function () {
+                logOut();
+            };
+            document.querySelector('#navbar').appendChild(logOutDiv);
+        } else {
+            const logInDiv = document.createElement('div');
+            logInDiv.innerHTML = 'Log In'
+            logInDiv.classList.add('col-2');
+            logInDiv.classList.add('btn');
+            logInDiv.classList.add('btn-secondary');
+            logInDiv.id = 'login-main-button';
+            logInDiv.onclick = function() {
+                logIn()
+            };
+            document.querySelector('#navbar').appendChild(logInDiv);
+            const registerDiv = document.createElement('div');
+            registerDiv.innerHTML = 'Register'
+            registerDiv.classList.add('col-2');
+            registerDiv.classList.add('btn');
+            registerDiv.classList.add('btn-secondary');
+            registerDiv.id = 'register-main-button';
+            registerDiv.onclick = function() {
+                register()
+            };
+            document.querySelector('#navbar').appendChild(registerDiv);
+        }
+    }
+    const form = new FormData();
+    const csrftoken = getCookie('csrftoken');
+    form.append('csrfmiddlewaretoken', csrftoken);
+    request.send(form);
+    return false;
+}
+
+function logOut() {
+    const request = new XMLHttpRequest();
+    request.open('POST', '/logout');
+    request.onload = function () {
+        authenticate();
+    }
+    const form = new FormData();
+    const csrftoken = getCookie('csrftoken');
+    form.append('csrfmiddlewaretoken', csrftoken);
+    request.send(form);
+    return false;
+}
+
+function logIn() {
+    const loginWindowText = Handlebars.templates.loginForm();
+    const div = document.createElement('div');
+    div.innerHTML = loginWindowText;
+    const loginWindow = div.firstElementChild;
+    setUpLoginWindow(loginWindow);
+    document.querySelector('#login-row').appendChild(loginWindow);
+}
+
+function register() {
+    const registrationWindowText = Handlebars.templates.registrationForm();
+    const div = document.createElement('div');
+    div.innerHTML = registrationWindowText;
+    const registrationWindow = div.firstElementChild;
+    setUpRegisterWindow(registrationWindow);
+    document.querySelector('#register-row').appendChild(registrationWindow);
+    document.querySelector('#cart').remove();
+}
+
 function main() {
     localStorageInit();
+    authenticate();
     displayCart();
     displayPizzas();
     displaySalads();

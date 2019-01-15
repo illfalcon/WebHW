@@ -1,9 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
 
-class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    cashback = models.DecimalField(default=0, max_digits=5, decimal_places=2)
 # pizza models
 
 class Dough(models.Model):

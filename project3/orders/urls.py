@@ -9,5 +9,9 @@ urlpatterns = [
     path("pastas", views.pastas, name="pastas"),
     path("subs", views.subs, name="subs"),
     path("platters", views.platters, name="platters"),
-    path("order", views.order, name="order")
+    path("order", views.order, name="order"),
+    path("register", views.register, name="register"),
+    path("login", views.userLogin, name="login"),
+    path("auth", views.auth, name="auth"),
+    path("logout", views.userLogout, name="logout")
 ]
